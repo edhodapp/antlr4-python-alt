@@ -41,23 +41,7 @@ class LexerActionType(object):
     TYPE = 7        #The type of a {@link LexerTypeAction} action.
 
 class LexerAction(object):
-
-    def __init__(self, action):
-        self.actionType = action
-        self.isPositionDependent = False
-
-    def __hash__(self):
-        return hash(self.actionType)
-
-    def __eq__(self, other):
-        return self is other
-
-    def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
-        return unicode(super(LexerAction, self))
-
+    isPositionDependent = False
 
 #
 # Implements the {@code skip} lexer action by calling {@link Lexer#skip}.
@@ -65,12 +49,10 @@ class LexerAction(object):
 # <p>The {@code skip} command does not have any parameters, so this action is
 # implemented as a singleton instance exposed by {@link #INSTANCE}.</p>
 class LexerSkipAction(LexerAction ):
+    actionType = LexerActionType.SKIP
 
     # Provides a singleton instance of this parameterless lexer action.
     INSTANCE = None
-
-    def __init__(self):
-        super(LexerSkipAction, self).__init__(LexerActionType.SKIP)
 
     def execute(self, lexer):
         lexer.skip()
@@ -83,9 +65,9 @@ LexerSkipAction.INSTANCE = LexerSkipAction()
 #  Implements the {@code type} lexer action by calling {@link Lexer#setType}
 # with the assigned type.
 class LexerTypeAction(LexerAction):
+    actionType = LexerActionType.TYPE
 
     def __init__(self, type):
-        super(LexerTypeAction, self).__init__(LexerActionType.TYPE)
         self.type = type
 
     def execute(self, lexer):
@@ -109,9 +91,9 @@ class LexerTypeAction(LexerAction):
 # Implements the {@code pushMode} lexer action by calling
 # {@link Lexer#pushMode} with the assigned mode.
 class LexerPushModeAction(LexerAction):
+    actionType = LexerActionType.PUSH_MODE
 
     def __init__(self, mode):
-        super(LexerPushModeAction, self).__init__(LexerActionType.PUSH_MODE)
         self.mode = mode
 
     # <p>This action is implemented by calling {@link Lexer#pushMode} with the
@@ -139,11 +121,9 @@ class LexerPushModeAction(LexerAction):
 # <p>The {@code popMode} command does not have any parameters, so this action is
 # implemented as a singleton instance exposed by {@link #INSTANCE}.</p>
 class LexerPopModeAction(LexerAction):
+    actionType = LexerActionType.POP_MODE
 
     INSTANCE = None
-
-    def __init__(self):
-        super(LexerPopModeAction, self).__init__(LexerActionType.POP_MODE)
 
     # <p>This action is implemented by calling {@link Lexer#popMode}.</p>
     def execute(self, lexer):
@@ -159,11 +139,9 @@ LexerPopModeAction.INSTANCE = LexerPopModeAction()
 # <p>The {@code more} command does not have any parameters, so this action is
 # implemented as a singleton instance exposed by {@link #INSTANCE}.</p>
 class LexerMoreAction(LexerAction):
+    actionType = LexerActionType.MORE
 
     INSTANCE = None
-
-    def __init__(self):
-        super(LexerMoreAction, self).__init__(LexerActionType.MORE)
 
     # <p>This action is implemented by calling {@link Lexer#popMode}.</p>
     def execute(self, lexer):
@@ -177,9 +155,9 @@ LexerMoreAction.INSTANCE = LexerMoreAction()
 # Implements the {@code mode} lexer action by calling {@link Lexer#mode} with
 # the assigned mode.
 class LexerModeAction(LexerAction):
+    actionType = LexerActionType.MODE
 
     def __init__(self, mode):
-        super(LexerModeAction, self).__init__(LexerActionType.MODE)
         self.mode = mode
 
     # <p>This action is implemented by calling {@link Lexer#mode} with the
@@ -211,6 +189,8 @@ class LexerModeAction(LexerAction):
 # command argument could not be evaluated when the grammar was compiled.</p>
 
 class LexerCustomAction(LexerAction):
+    actionType = LexerActionType.CUSTOM
+    isPositionDependent = True
 
     # Constructs a custom lexer action with the specified rule and action
     # indexes.
@@ -221,10 +201,8 @@ class LexerCustomAction(LexerAction):
     # {@link Recognizer#action}.
     #/
     def __init__(self, ruleIndex, actionIndex):
-        super(LexerCustomAction, self).__init__(LexerActionType.CUSTOM)
         self.ruleIndex = ruleIndex
         self.actionIndex = actionIndex
-        self.isPositionDependent = True
 
     # <p>Custom actions are implemented by calling {@link Lexer#action} with the
     # appropriate rule and action indexes.</p>
@@ -245,11 +223,11 @@ class LexerCustomAction(LexerAction):
 # Implements the {@code channel} lexer action by calling
 # {@link Lexer#setChannel} with the assigned channel.
 class LexerChannelAction(LexerAction):
+    actionType = LexerActionType.CHANNEL
 
     # Constructs a new {@code channel} action with the specified channel value.
     # @param channel The channel value to pass to {@link Lexer#setChannel}.
     def __init__(self, channel):
-        super(LexerChannelAction, self).__init__(LexerActionType.CHANNEL)
         self.channel = channel
 
     # <p>This action is implemented by calling {@link Lexer#setChannel} with the
@@ -280,6 +258,7 @@ class LexerChannelAction(LexerAction):
 # lexer actions, see {@link LexerActionExecutor#append} and
 # {@link LexerActionExecutor#fixOffsetBeforeMatch}.</p>
 class LexerIndexedCustomAction(LexerAction):
+    isPositionDependent = True
 
     # Constructs a new indexed custom action by associating a character offset
     # with a {@link LexerAction}.
@@ -293,10 +272,9 @@ class LexerIndexedCustomAction(LexerAction):
     # @param action The lexer action to execute at a particular offset in the
     # input {@link CharStream}.
     def __init__(self, offset, action):
-        super(LexerIndexedCustomAction, self).__init__(action.actionType)
+        self.actionType = action.actionType
         self.offset = offset
         self.action = action
-        self.isPositionDependent = True
 
     # <p>This method calls {@link #execute} on the result of {@link #getAction}
     # using the provided {@code lexer}.</p>
