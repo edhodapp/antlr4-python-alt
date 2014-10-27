@@ -88,10 +88,10 @@ class PredictionContext(object):
 
 
 def calculateHashCode(parent, returnState):
-    return hash( str(parent) + str(returnState))
+    return hash((parent, returnState))
 
 def calculateEmptyHashCode():
-    return hash("")
+    return hash(())
 
 
 #  Used to cache {@link PredictionContext} objects. Its used for the shared
@@ -163,8 +163,7 @@ class SingletonPredictionContext(PredictionContext):
         else:
             return self.returnState == other.returnState and self.parentCtx==other.parentCtx
 
-    def __hash__(self):
-        return self.cachedHashCode
+    __hash__ = PredictionContext.__hash__
 
     def __unicode__(self):
         up = "" if self.parentCtx is None else unicode(self.parentCtx)

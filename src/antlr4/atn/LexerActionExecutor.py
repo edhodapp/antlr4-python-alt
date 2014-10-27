@@ -45,7 +45,7 @@ class LexerActionExecutor(object):
         self.lexerActions = lexerActions
         # Caches the result of {@link #hashCode} since the hash code is an element
         # of the performance-critical {@link LexerATNConfig#hashCode} operation.
-        self.hashCode = hash("".join([str(la) for la in lexerActions]))
+        self.hashCode = hash(tuple(lexerActions))
 
 
     # Creates a {@link LexerActionExecutor} which executes the actions for

@@ -94,10 +94,10 @@ class ATNConfig(object):
                 and self.semanticContext==other.semanticContext
 
     def __hash__(self):
-        return hash( str(self.state.stateNumber) + "/" +
-                 str(self.alt) + "/" +
-                 str(self.context) + "/" +
-                 str(self.semanticContext) )
+        return hash((self.state.stateNumber,
+                     self.alt,
+                     self.context,
+                     self.semanticContext))
 
     def __str__(self):
         return unicode(self)
@@ -133,9 +133,9 @@ class LexerATNConfig(ATNConfig):
         self.passedThroughNonGreedyDecision = False if config is None else self.checkNonGreedyDecision(config, state)
 
     def __hash__(self):
-        return hash(str(self.state.stateNumber) + str(self.alt) + str(self.context) \
-                + str(self.semanticContext) + str(1 if self.passedThroughNonGreedyDecision else 0) \
-                + str(self.lexerActionExecutor))
+        return hash((self.state.stateNumber, self.alt, self.context,
+                     self.semanticContext, self.passedThroughNonGreedyDecision,
+                     self.lexerActionExecutor))
 
     def __eq__(self, other):
         if self is other:

@@ -136,13 +136,7 @@ class Predicate(SemanticContext):
         return parser.sempred(localctx, self.ruleIndex, self.predIndex)
 
     def __hash__(self):
-        with StringIO() as buf:
-            buf.write(unicode(self.ruleIndex))
-            buf.write(u"/")
-            buf.write(unicode(self.predIndex))
-            buf.write(u"/")
-            buf.write(unicode(self.isCtxDependent))
-            return hash(buf.getvalue())
+        return hash((self.ruleIndex, self.predIndex, self.isCtxDependent))
 
     def __eq__(self, other):
         if self is other:
@@ -175,7 +169,7 @@ class PrecedencePredicate(SemanticContext):
         return self.precedence - other.precedence
 
     def __hash__(self):
-        return 31
+        return hash(self.precedence)
 
     def __eq__(self, other):
         if self is other:
