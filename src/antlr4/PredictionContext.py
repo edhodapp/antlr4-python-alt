@@ -205,7 +205,8 @@ class ArrayPredictionContext(PredictionContext):
     #  returnState == {@link #EMPTY_RETURN_STATE}.
 
     def __init__(self, parents, returnStates):
-        super(ArrayPredictionContext, self).__init__(calculateHashCode(parents, returnStates))
+        super(ArrayPredictionContext, self).__init__(
+            calculateHashCode(tuple(parents), tuple(returnStates)))
         assert parents is not None and len(parents)>0
         assert returnStates is not None and len(returnStates)>0
         self.parents = parents
@@ -246,7 +247,7 @@ class ArrayPredictionContext(PredictionContext):
                 if self.returnStates[i]==PredictionContext.EMPTY_RETURN_STATE:
                     buf.write(u"$")
                     continue
-                buf.write(self.returnStates[i])
+                buf.write(unicode(self.returnStates[i]))
                 if self.parents[i] is not None:
                     buf.write(u' ')
                     buf.write(unicode(self.parents[i]))
@@ -304,9 +305,9 @@ def merge(a, b, rootIsWildcard, mergeCache):
 
     # convert singleton so both are arrays to normalize
     if isinstance( a, SingletonPredictionContext ):
-        a = ArrayPredictionContext(a)
+        a = ArrayPredictionContext([a.parentCtx], [a.returnState])
     if isinstance( b, SingletonPredictionContext):
-        b = ArrayPredictionContext(b)
+        b = ArrayPredictionContext([b.parentCtx], [b.returnState])
     return mergeArrays(a, b, rootIsWildcard, mergeCache)
 
 
@@ -489,8 +490,8 @@ def mergeArrays(a, b, rootIsWildcard, mergeCache):
     j = 0; # walks b
     k = 0; # walks target M array
 
-    mergedReturnStates = [] * (len(a.returnState) + len( b.returnStates))
-    mergedParents = [] * len(mergedReturnStates)
+    mergedReturnStates = [None] * (len(a.returnStates) + len(b.returnStates))
+    mergedParents = [None] * len(mergedReturnStates)
     # walk and merge to yield mergedParents, mergedReturnStates
     while i<len(a.returnStates) and j<len(b.returnStates):
         a_parent = a.parents[i]
