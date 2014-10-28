@@ -51,7 +51,7 @@ class ATNConfigSet(object):
     def __init__(self, fullCtx=True):
         # All configs but hashed by (s, i, _, pi) not including context. Wiped out
         # when we go readonly as this set becomes a DFA state.
-        self.configLookup = set()
+        self.configLookup = {}
         # Indicates that this configuration set is part of a full context
         #  LL prediction. It will be used to determine how to merge $. With SLL
         #  it's a wildcard whereas it is not for LL context merge.
@@ -96,8 +96,11 @@ class ATNConfigSet(object):
             self.hasSemanticContext = True
         if config.reachesIntoOuterContext > 0:
             self.dipsIntoOuterContext = True
-        existing = self.getOrAdd(config)
-        if existing is config:
+        key = (config.state.stateNumber, config.alt, config.semanticContext)
+        try:
+            existing = self.configLookup[key]
+        except KeyError:
+            self.configLookup[key] = config
             self.cachedHashCode = -1
             self.configs.append(config)  # track order here
             return True
@@ -110,13 +113,6 @@ class ATNConfigSet(object):
         existing.reachesIntoOuterContext = max(existing.reachesIntoOuterContext, config.reachesIntoOuterContext)
         existing.context = merged # replace context; no need to alt mapping
         return True
-
-    def getOrAdd(self, config):
-        for c in self.configLookup:
-            if c==config:
-                return c
-        self.configLookup.add(config)
-        return config
 
     def getStates(self):
         states = set()
