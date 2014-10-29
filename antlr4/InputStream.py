@@ -30,11 +30,12 @@
 # 
 import unittest
 
+from antlr4.Token import Token
+
 
 # 
 #  Vacuum all input from a string and then treat it like a buffer. 
 #
-from antlr4.Token import Token
 
 
 class InputStream (object):
@@ -123,5 +124,3 @@ class TestInputStream(unittest.TestCase):
         self.assertEqual("bcd", stream.getText(1, 3))
         stream.reset()
         self.assertEqual(0, stream.index)
-        
-        

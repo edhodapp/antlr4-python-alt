@@ -42,14 +42,15 @@
 # <p>
 # Whitespace is not allowed.</p>
 #
-from antlr4 import CommonTokenStream, DFA, PredictionContextCache, Lexer, LexerATNSimulator, ParserRuleContext, TerminalNode
-from antlr4.InputStream import InputStream
-from antlr4.Token import Token
+from antlr4 import (DFA, CommonTokenStream, Lexer, LexerATNSimulator,
+                    ParserRuleContext, PredictionContextCache, TerminalNode)
+from antlr4._compat import py2_unicode_compat
 from antlr4.atn.ATNSimulator import ATNSimulator
 from antlr4.ErrorListener import ErrorListener
 from antlr4.Errors import LexerNoViableAltException
+from antlr4.InputStream import InputStream
+from antlr4.Token import Token
 from antlr4.tree.Trees import Trees
-from antlr4._compat import py2_unicode_compat
 
 
 class XPathLexer(Lexer):

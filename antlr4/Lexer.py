@@ -34,10 +34,12 @@
 #  of speed.
 #/
 from io import StringIO
+
 from antlr4.CommonTokenFactory import CommonTokenFactory
+from antlr4.Errors import IllegalStateException, LexerNoViableAltException
 from antlr4.Recognizer import Recognizer
 from antlr4.Token import Token
-from antlr4.Errors import IllegalStateException, LexerNoViableAltException
+
 
 class TokenSource(object):
 
@@ -342,4 +344,3 @@ class Lexer(Recognizer, TokenSource):
             else:
                 # TODO: Do we lose character or line position information?
                 self._input.consume()
-

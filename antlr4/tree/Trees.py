@@ -31,10 +31,11 @@
 
 
 # A set of utility routines useful for all kinds of ANTLR trees.#
-from antlr4.Token import Token
-from antlr4.misc.Utils import escapeWhitespace
-from antlr4.tree.Tree import RuleNode, ErrorNode, TerminalNode
 from antlr4._compat import text_type
+from antlr4.misc.Utils import escapeWhitespace
+from antlr4.Token import Token
+from antlr4.tree.Tree import ErrorNode, RuleNode, TerminalNode
+
 
 class Trees(object):
 

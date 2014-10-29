@@ -28,12 +28,13 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-from antlr4.misc.IntervalSet import IntervalSet
-
-from antlr4.Token import Token
-from antlr4.atn.ATNState import ATNState
-from antlr4.Errors import NoViableAltException, InputMismatchException, FailedPredicateException, ParseCancellationException
 from antlr4._compat import text_type
+from antlr4.atn.ATNState import ATNState
+from antlr4.Errors import (FailedPredicateException, InputMismatchException,
+                           NoViableAltException, ParseCancellationException)
+from antlr4.misc.IntervalSet import IntervalSet
+from antlr4.Token import Token
+
 
 class ErrorStrategy(object):
 

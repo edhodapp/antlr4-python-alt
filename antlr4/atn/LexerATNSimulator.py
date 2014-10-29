@@ -45,17 +45,20 @@
 #  can simply return the predicted token type.</p>
 #/
 from antlr4 import Lexer
-from antlr4.atn.PredictionContext import SingletonPredictionContext, PredictionContext
-from antlr4.Token import Token
 from antlr4.atn.ATN import ATN
 from antlr4.atn.ATNConfig import LexerATNConfig
-from antlr4.atn.ATNSimulator import ATNSimulator
 from antlr4.atn.ATNConfigSet import OrderedATNConfigSet
+from antlr4.atn.ATNSimulator import ATNSimulator
 from antlr4.atn.ATNState import RuleStopState
 from antlr4.atn.LexerActionExecutor import LexerActionExecutor
+from antlr4.atn.PredictionContext import (PredictionContext,
+                                          SingletonPredictionContext)
 from antlr4.atn.Transition import Transition
 from antlr4.dfa.DFAState import DFAState
-from antlr4.Errors import LexerNoViableAltException, UnsupportedOperationException
+from antlr4.Errors import (LexerNoViableAltException,
+                           UnsupportedOperationException)
+from antlr4.Token import Token
+
 
 class SimState(object):
 
@@ -577,5 +580,3 @@ class LexerATNSimulator(ATNSimulator):
             return "EOF"
         else:
             return "'" + chr(t) + "'"
-
-

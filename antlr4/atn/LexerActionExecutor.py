@@ -39,6 +39,7 @@
 
 from antlr4.atn.LexerAction import LexerIndexedCustomAction
 
+
 class LexerActionExecutor(object):
 
     def __init__(self, lexerActions=list()):

@@ -42,10 +42,11 @@
 #  the states. We'll use the term Edge for the DFA to distinguish them from
 #  ATN transitions.</p>
 #
-from antlr4.misc.IntervalSet import IntervalSet, Interval
-from antlr4.Token import Token
-from antlr4.atn.SemanticContext import Predicate, PrecedencePredicate
 from antlr4._compat import py2_unicode_compat, text_type
+from antlr4.atn.SemanticContext import PrecedencePredicate, Predicate
+from antlr4.misc.IntervalSet import Interval, IntervalSet
+from antlr4.Token import Token
+
 
 class Transition (object):
     # constants for serialization
@@ -280,4 +281,3 @@ Transition.serializationTypes = {
              WildcardTransition: Transition.WILDCARD,
              PrecedencePredicateTransition: Transition.PRECEDENCE
          }
-

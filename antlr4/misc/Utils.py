@@ -31,6 +31,7 @@
 
 from antlr4._compat import text_type
 
+
 def str_collection(val, begin, end):
     return begin + u', '.join([text_type(item) for item in val]) + end
 

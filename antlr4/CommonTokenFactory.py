@@ -35,6 +35,7 @@
 #
 from antlr4.Token import CommonToken
 
+
 class TokenFactory(object):
 
     pass

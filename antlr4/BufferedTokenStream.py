@@ -39,8 +39,10 @@
 # {@link Token#HIDDEN_CHANNEL}, use a filtering token stream such a
 # {@link CommonTokenStream}.</p>
 from io import StringIO
-from antlr4.Token import Token
+
 from antlr4.Errors import IllegalStateException
+from antlr4.Token import Token
+
 
 # this is just to keep meaningful parameter types to Parser
 class TokenStream(object):

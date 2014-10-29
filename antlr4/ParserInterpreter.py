@@ -43,14 +43,15 @@
 #  See TestParserInterpreter for examples.
 #
 from antlr4 import PredictionContextCache
+from antlr4.atn.ATNState import ATNState, LoopEndState, StarLoopEntryState
+from antlr4.atn.ParserATNSimulator import ParserATNSimulator
+from antlr4.atn.Transition import Transition
 from antlr4.dfa.DFA import DFA
+from antlr4.Errors import (FailedPredicateException, RecognitionException,
+                           UnsupportedOperationException)
 from antlr4.Parser import Parser
 from antlr4.ParserRuleContext import InterpreterRuleContext
 from antlr4.Token import Token
-from antlr4.atn.ATNState import StarLoopEntryState, ATNState, LoopEndState
-from antlr4.atn.ParserATNSimulator import ParserATNSimulator
-from antlr4.atn.Transition import Transition
-from antlr4.Errors import RecognitionException, UnsupportedOperationException, FailedPredicateException
 
 
 class ParserInterpreter(Parser):

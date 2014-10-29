@@ -30,8 +30,8 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #/
 from antlr4._compat import py2_unicode_compat, text_type
-from antlr4.RuleContext import RuleContext
 from antlr4.atn.ATNState import ATNState
+from antlr4.RuleContext import RuleContext
 
 
 class PredictionContext(object):
@@ -652,4 +652,3 @@ def getAllContextNodes(context, nodes=None, visited=None):
         for i in range(0, len(context)):
             getAllContextNodes(context.getParent(i), nodes, visited);
         return nodes
-

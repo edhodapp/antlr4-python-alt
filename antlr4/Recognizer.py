@@ -29,8 +29,9 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 from antlr4._compat import text_type
+from antlr4.ErrorListener import ConsoleErrorListener, ProxyErrorListener
 from antlr4.Token import Token
-from antlr4.ErrorListener import ProxyErrorListener, ConsoleErrorListener
+
 
 class Recognizer(object):
 

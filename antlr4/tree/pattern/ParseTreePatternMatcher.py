@@ -87,15 +87,16 @@
 # {@code \<} and {@code \>}.</p>
 #
 from antlr4 import CommonTokenStream, ParserRuleContext
+from antlr4.Errors import ParseCancellationException, RecognitionException
+from antlr4.ErrorStrategy import BailErrorStrategy
 from antlr4.InputStream import InputStream
 from antlr4.ListTokenSource import ListTokenSource
 from antlr4.Token import Token
-from antlr4.ErrorStrategy import BailErrorStrategy
-from antlr4.Errors import RecognitionException, ParseCancellationException
 from antlr4.tree.pattern.Chunk import TagChunk, TextChunk
 from antlr4.tree.pattern.RuleTagToken import RuleTagToken
 from antlr4.tree.pattern.TokenTagToken import TokenTagToken
-from antlr4.tree.Tree import TerminalNode, RuleNode
+from antlr4.tree.Tree import RuleNode, TerminalNode
+
 
 class CannotInvokeStartRule(Exception):
 

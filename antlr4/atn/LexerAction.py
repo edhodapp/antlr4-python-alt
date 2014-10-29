@@ -31,6 +31,7 @@
  #
 from antlr4._compat import py2_unicode_compat, text_type
 
+
 class LexerActionType(object):
 
     CHANNEL = 0     #The type of a {@link LexerChannelAction} action.

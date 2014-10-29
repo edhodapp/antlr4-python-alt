@@ -34,4 +34,3 @@ class ATNType(object):
 
     LEXER = 0
     PARSER = 1
-

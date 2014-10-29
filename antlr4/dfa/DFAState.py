@@ -31,8 +31,9 @@
 #/
 
 # Map a predicate to a predicted alternative.#/
-from antlr4.atn.ATNConfigSet import ATNConfigSet
 from antlr4._compat import py2_unicode_compat, text_type
+from antlr4.atn.ATNConfigSet import ATNConfigSet
+
 
 @py2_unicode_compat
 class PredPrediction(object):

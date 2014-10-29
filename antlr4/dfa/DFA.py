@@ -28,10 +28,10 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from antlr4._compat import py2_unicode_compat, text_type
 from antlr4.atn.ATNConfigSet import ATNConfigSet
 from antlr4.dfa.DFAState import DFAState
 from antlr4.Errors import IllegalStateException
-from antlr4._compat import py2_unicode_compat, text_type
 
 
 @py2_unicode_compat
@@ -146,4 +146,3 @@ class DFA(object):
         from antlr4.dfa.DFASerializer import LexerDFASerializer
         serializer = LexerDFASerializer(self)
         return text_type(serializer)
-

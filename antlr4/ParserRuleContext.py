@@ -51,7 +51,9 @@
 #  satisfy the superclass interface.
 
 from antlr4.RuleContext import RuleContext
-from antlr4.tree.Tree import TerminalNodeImpl, ErrorNodeImpl, TerminalNode, INVALID_INTERVAL
+from antlr4.tree.Tree import (INVALID_INTERVAL, ErrorNodeImpl, TerminalNode,
+                              TerminalNodeImpl)
+
 
 class ParserRuleContext(RuleContext):
 

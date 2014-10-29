@@ -27,16 +27,17 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  self SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from __future__ import print_function
+
+from antlr4._compat import text_type
+from antlr4.atn.ATNDeserializationOptions import ATNDeserializationOptions
+from antlr4.atn.ATNDeserializer import ATNDeserializer
+from antlr4.Errors import UnsupportedOperationException
 from antlr4.ErrorStrategy import DefaultErrorStrategy
+from antlr4.Lexer import Lexer
 from antlr4.Recognizer import Recognizer
 from antlr4.Token import Token
-from antlr4.Lexer import Lexer
-from antlr4.atn.ATNDeserializer import ATNDeserializer
-from antlr4.atn.ATNDeserializationOptions import ATNDeserializationOptions
-from antlr4.Errors import UnsupportedOperationException
 from antlr4.tree.pattern.ParseTreePatternMatcher import ParseTreePatternMatcher
 from antlr4.tree.Tree import ParseTreeListener
-from antlr4._compat import text_type
 
 
 class TraceListener(ParseTreeListener):

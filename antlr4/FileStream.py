@@ -36,6 +36,7 @@
 
 import codecs
 import unittest
+
 from antlr4.InputStream import InputStream
 
 

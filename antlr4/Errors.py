@@ -27,9 +27,9 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #/
-from antlr4.misc import Utils
-from antlr4.atn.Transition import PredicateTransition
 from antlr4._compat import py2_unicode_compat
+from antlr4.atn.Transition import PredicateTransition
+from antlr4.misc import Utils
 
 
 class UnsupportedOperationException(Exception):
@@ -174,4 +174,3 @@ class FailedPredicateException(RecognitionException):
 class ParseCancellationException(CancellationException):
 
     pass
-

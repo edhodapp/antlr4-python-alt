@@ -51,8 +51,9 @@
 #  @see ParserRuleContext
 #/
 from antlr4._compat import py2_unicode_compat, text_type
-from antlr4.tree.Tree import RuleNode, INVALID_INTERVAL
+from antlr4.tree.Tree import INVALID_INTERVAL, RuleNode
 from antlr4.tree.Trees import Trees
+
 
 @py2_unicode_compat
 class RuleContext(RuleNode):
@@ -228,4 +229,3 @@ class RuleContext(RuleNode):
 
         buf.append(u"]")
         return u''.join(buf)
-

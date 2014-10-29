@@ -43,4 +43,3 @@ class ATNDeserializationOptions(object):
 
 ATNDeserializationOptions.defaultOptions = ATNDeserializationOptions()
 ATNDeserializationOptions.defaultOptions.readOnly = True
-

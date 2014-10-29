@@ -40,6 +40,7 @@ from antlr4.atn.ATNConfigSet import ATNConfigSet
 from antlr4.atn.ATNState import RuleStopState
 from antlr4.atn.SemanticContext import SemanticContext
 
+
 class PredictionMode(object):
     #
     # The SLL(*) prediction mode. This prediction mode ignores the current
