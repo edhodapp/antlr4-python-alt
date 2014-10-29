@@ -1,7 +1,6 @@
-/.idea
-*.pyc
-__pycache__
-src/TestAntLR.py
-/dist
-/MANIFEST
-*.egg-info/
+*.py[cod]
+/*.egg-info/
+/.tox/
+/.coverage
+/build/
+/dist/

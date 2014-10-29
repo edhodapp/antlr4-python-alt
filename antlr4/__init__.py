@@ -17,3 +17,5 @@ from antlr4.error.Errors import RecognitionException, IllegalStateException, NoV
 from antlr4.error.ErrorStrategy import BailErrorStrategy
 from antlr4.error.DiagnosticErrorListener import DiagnosticErrorListener
 from antlr4.Utils import str_list
+
+__version__ = '4.4.1'
