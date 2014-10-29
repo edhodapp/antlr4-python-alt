@@ -90,11 +90,11 @@ from antlr4 import CommonTokenStream, ParserRuleContext
 from antlr4.InputStream import InputStream
 from antlr4.ListTokenSource import ListTokenSource
 from antlr4.Token import Token
-from antlr4.error.ErrorStrategy import BailErrorStrategy
-from antlr4.error.Errors import RecognitionException, ParseCancellationException
-from antlr4.tree.Chunk import TagChunk, TextChunk
-from antlr4.tree.RuleTagToken import RuleTagToken
-from antlr4.tree.TokenTagToken import TokenTagToken
+from antlr4.ErrorStrategy import BailErrorStrategy
+from antlr4.Errors import RecognitionException, ParseCancellationException
+from antlr4.tree.pattern.Chunk import TagChunk, TextChunk
+from antlr4.tree.pattern.RuleTagToken import RuleTagToken
+from antlr4.tree.pattern.TokenTagToken import TokenTagToken
 from antlr4.tree.Tree import TerminalNode, RuleNode
 
 class CannotInvokeStartRule(Exception):

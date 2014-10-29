@@ -30,7 +30,7 @@
 #
 from antlr4._compat import text_type
 from antlr4.Token import Token
-from antlr4.error.ErrorListener import ProxyErrorListener, ConsoleErrorListener
+from antlr4.ErrorListener import ProxyErrorListener, ConsoleErrorListener
 
 class Recognizer(object):
 
@@ -67,7 +67,7 @@ class Recognizer(object):
     def getTokenTypeMap(self):
         tokenNames = self.getTokenNames()
         if tokenNames is None:
-            from antlr4.error.Errors import UnsupportedOperationException
+            from antlr4.Errors import UnsupportedOperationException
             raise UnsupportedOperationException("The current recognizer does not provide a list of token names.")
         result = self.tokenTypeMapCache.get(tokenNames, None)
         if result is None:
@@ -83,7 +83,7 @@ class Recognizer(object):
     def getRuleIndexMap(self):
         ruleNames = self.getRuleNames()
         if ruleNames is None:
-            from antlr4.error.Errors import UnsupportedOperationException
+            from antlr4.Errors import UnsupportedOperationException
             raise UnsupportedOperationException("The current recognizer does not provide a list of rule names.")
         result = self.ruleIndexMapCache.get(ruleNames, None)
         if result is None:

@@ -27,7 +27,7 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #/
-from antlr4.IntervalSet import IntervalSet
+from antlr4.misc.IntervalSet import IntervalSet
 from antlr4.Token import Token
 
 
@@ -67,7 +67,7 @@ class ATN(object):
     #  the rule surrounding {@code s}. In other words, the set will be
     #  restricted to tokens reachable staying within {@code s}'s rule.
     def nextTokensInContext(self, s, ctx):
-        from antlr4.LL1Analyzer import LL1Analyzer
+        from antlr4.atn.LL1Analyzer import LL1Analyzer
         anal = LL1Analyzer(self)
         return anal.LOOK(s, ctx=ctx)
 

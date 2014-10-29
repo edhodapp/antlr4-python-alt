@@ -40,7 +40,7 @@
 # {@link CommonTokenStream}.</p>
 from io import StringIO
 from antlr4.Token import Token
-from antlr4.error.Errors import IllegalStateException
+from antlr4.Errors import IllegalStateException
 
 # this is just to keep meaningful parameter types to Parser
 class TokenStream(object):

@@ -50,8 +50,8 @@
 # this situation occurs.</li>
 # </ul>
 
-from antlr4.Utils import str_set
-from antlr4.error.ErrorListener import ErrorListener
+from antlr4.misc.Utils import str_set
+from antlr4.ErrorListener import ErrorListener
 from antlr4._compat import text_type
 
 class DiagnosticErrorListener(ErrorListener):

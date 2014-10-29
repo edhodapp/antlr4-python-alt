@@ -31,7 +31,7 @@
 #/
 
 # A DFA walker that knows how to dump them to serialized strings.#/
-from antlr4.Utils import str_list
+from antlr4.misc.Utils import str_list
 from antlr4._compat import py2_unicode_compat, text_type, unichr
 
 

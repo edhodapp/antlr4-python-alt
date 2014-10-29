@@ -37,7 +37,7 @@ from io import StringIO
 from antlr4.CommonTokenFactory import CommonTokenFactory
 from antlr4.Recognizer import Recognizer
 from antlr4.Token import Token
-from antlr4.error.Errors import IllegalStateException, LexerNoViableAltException
+from antlr4.Errors import IllegalStateException, LexerNoViableAltException
 
 class TokenSource(object):
 

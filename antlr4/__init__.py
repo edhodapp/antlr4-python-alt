@@ -10,12 +10,12 @@ from antlr4.atn.ATNDeserializer import ATNDeserializer
 from antlr4.atn.LexerATNSimulator import LexerATNSimulator
 from antlr4.atn.ParserATNSimulator import ParserATNSimulator
 from antlr4.atn.PredictionMode import PredictionMode
-from antlr4.PredictionContext import PredictionContextCache
+from antlr4.atn.PredictionContext import PredictionContextCache
 from antlr4.ParserRuleContext import ParserRuleContext
 from antlr4.tree.Tree import ParseTreeListener, ParseTreeVisitor, ParseTreeWalker, TerminalNode, ErrorNode, RuleNode
-from antlr4.error.Errors import RecognitionException, IllegalStateException, NoViableAltException
-from antlr4.error.ErrorStrategy import BailErrorStrategy
-from antlr4.error.DiagnosticErrorListener import DiagnosticErrorListener
-from antlr4.Utils import str_list
+from antlr4.Errors import RecognitionException, IllegalStateException, NoViableAltException
+from antlr4.ErrorStrategy import BailErrorStrategy
+from antlr4.DiagnosticErrorListener import DiagnosticErrorListener
+from antlr4.misc.Utils import str_list
 
 __version__ = '4.4.1'

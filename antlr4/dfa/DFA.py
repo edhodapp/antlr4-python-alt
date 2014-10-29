@@ -30,7 +30,7 @@
 
 from antlr4.atn.ATNConfigSet import ATNConfigSet
 from antlr4.dfa.DFAState import DFAState
-from antlr4.error.Errors import IllegalStateException
+from antlr4.Errors import IllegalStateException
 from antlr4._compat import py2_unicode_compat, text_type
 
 

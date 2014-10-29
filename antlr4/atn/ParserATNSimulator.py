@@ -258,10 +258,10 @@
 #
 from __future__ import print_function
 import sys
-from antlr4.PredictionContext import PredictionContext, SingletonPredictionContext, PredictionContextFromRuleContext
+from antlr4.atn.PredictionContext import PredictionContext, SingletonPredictionContext, PredictionContextFromRuleContext
 from antlr4.ParserRuleContext import ParserRuleContext
 from antlr4.Token import Token
-from antlr4.Utils import str_list
+from antlr4.misc.Utils import str_list
 from antlr4.atn.ATN import ATN
 from antlr4.atn.ATNConfig import ATNConfig
 from antlr4.atn.ATNConfigSet import ATNConfigSet
@@ -271,7 +271,7 @@ from antlr4.atn.PredictionMode import PredictionMode
 from antlr4.atn.SemanticContext import SemanticContext, andContext, orContext
 from antlr4.atn.Transition import Transition, RuleTransition, ActionTransition, AtomTransition, SetTransition, NotSetTransition
 from antlr4.dfa.DFAState import DFAState, PredPrediction
-from antlr4.error.Errors import NoViableAltException
+from antlr4.Errors import NoViableAltException
 from antlr4._compat import text_type
 
 
