@@ -37,7 +37,7 @@
 #  the tree of semantic predicates encountered before reaching
 #  an ATN state.
 #/
-from antlr4.atn.ATNState import ATNState, DecisionState
+from antlr4.atn.ATNState import DecisionState
 from antlr4.atn.SemanticContext import SemanticContext
 from antlr4._compat import py2_unicode_compat, text_type
 

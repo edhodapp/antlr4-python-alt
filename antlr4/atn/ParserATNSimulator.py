@@ -268,7 +268,7 @@ from antlr4.atn.ATNConfigSet import ATNConfigSet
 from antlr4.atn.ATNSimulator import ATNSimulator
 from antlr4.atn.ATNState import StarLoopEntryState, RuleStopState
 from antlr4.atn.PredictionMode import PredictionMode
-from antlr4.atn.SemanticContext import SemanticContext, AND, andContext, orContext
+from antlr4.atn.SemanticContext import SemanticContext, andContext, orContext
 from antlr4.atn.Transition import Transition, RuleTransition, ActionTransition, AtomTransition, SetTransition, NotSetTransition
 from antlr4.dfa.DFAState import DFAState, PredPrediction
 from antlr4.error.Errors import NoViableAltException

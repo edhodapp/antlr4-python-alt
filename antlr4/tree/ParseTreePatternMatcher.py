@@ -245,7 +245,6 @@ class ParseTreePatternMatcher(object):
             # (expr ...) and <expr>
             ruleTagToken = self.getRuleTagToken(patternTree)
             if ruleTagToken is not None:
-                m = None
                 if tree.ruleContext.ruleIndex == patternTree.ruleContext.ruleIndex:
                     # track label->list-of-nodes for both rule name and label (if any)
                     self.map(labels, ruleTagToken.ruleName, tree)

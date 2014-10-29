@@ -44,13 +44,10 @@
 #
 from antlr4 import CommonTokenStream, DFA, PredictionContextCache, Lexer, LexerATNSimulator, ParserRuleContext, TerminalNode
 from antlr4.InputStream import InputStream
-from antlr4.Parser import Parser
-from antlr4.RuleContext import RuleContext
 from antlr4.Token import Token
 from antlr4.atn.ATNSimulator import ATNSimulator
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.Errors import LexerNoViableAltException
-from antlr4.tree.Tree import ParseTree
 from antlr4.tree.Trees import Trees
 from antlr4._compat import py2_unicode_compat
 
