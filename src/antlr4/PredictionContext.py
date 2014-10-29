@@ -340,17 +340,17 @@ def merge(a, b, rootIsWildcard, mergeCache):
 #/
 def mergeSingletons(a, b, rootIsWildcard, mergeCache):
     if mergeCache is not None:
-        previous = mergeCache.get(a,b)
+        previous = mergeCache.get((a, b), None)
         if previous is not None:
             return previous
-        previous = mergeCache.get(b,a)
+        previous = mergeCache.get((b, a), None)
         if previous is not None:
             return previous
 
     rootMerge = mergeRoot(a, b, rootIsWildcard)
     if rootMerge is not None:
         if mergeCache is not None:
-            mergeCache.put(a, b, rootMerge)
+            mergeCache[a, b] = rootMerge
         return rootMerge
 
     if a.returnState==b.returnState:
@@ -366,7 +366,7 @@ def mergeSingletons(a, b, rootIsWildcard, mergeCache):
         # new joined parent so create new singleton pointing to it, a'
         a_ = SingletonPredictionContext.create(parent, a.returnState)
         if mergeCache is not None:
-            mergeCache.put(a, b, a_)
+            mergeCache[a, b] = a_
         return a_
     else: # a != b payloads differ
         # see if we can collapse parents due to $+x parents if local ctx
@@ -382,7 +382,7 @@ def mergeSingletons(a, b, rootIsWildcard, mergeCache):
             parents = [singleParent, singleParent]
             a_ = ArrayPredictionContext(parents, payloads);
             if mergeCache is not None:
-                mergeCache.put(a, b, a_)
+                mergeCache[a, b] = a_
             return a_
         # parents differ and can't merge them. Just pack together
         # into array; can't merge.
@@ -395,7 +395,7 @@ def mergeSingletons(a, b, rootIsWildcard, mergeCache):
             parents = [ b.parentCtx, a.parentCtx ]
         a_ = ArrayPredictionContext(parents, payloads)
         if mergeCache is not None:
-            mergeCache.put(a, b, a_)
+            mergeCache[a, b] = a_
         return a_
 
 
@@ -478,10 +478,10 @@ def mergeRoot(a, b, rootIsWildcard):
 #/
 def mergeArrays(a, b, rootIsWildcard, mergeCache):
     if mergeCache is not None:
-        previous = mergeCache.get(a,b)
+        previous = mergeCache.get((a, b), None)
         if previous is not None:
             return previous
-        previous = mergeCache.get(b,a)
+        previous = mergeCache.get((b, a), None)
         if previous is not None:
             return previous
 
@@ -539,7 +539,7 @@ def mergeArrays(a, b, rootIsWildcard, mergeCache):
         if k == 1: # for just one merged element, return singleton top
             a_ = SingletonPredictionContext.create(mergedParents[0], mergedReturnStates[0])
             if mergeCache is not None:
-                mergeCache.put(a,b,a_)
+                mergeCache[a, b] = a_
             return a_
         mergedParents = mergedParents[0:k]
         mergedReturnStates = mergedReturnStates[0:k]
@@ -550,16 +550,16 @@ def mergeArrays(a, b, rootIsWildcard, mergeCache):
     # TODO: track whether this is possible above during merge sort for speed
     if M==a:
         if mergeCache is not None:
-            mergeCache.put(a,b,a)
+            mergeCache[a, b] = a
         return a
     if M==b:
         if mergeCache is not None:
-            mergeCache.put(a,b,b)
+            mergeCache[a, b] = b
         return b
     combineCommonParents(mergedParents)
 
     if mergeCache is not None:
-        mergeCache.put(a,b,M)
+        mergeCache[a, b] = M
     return M
 
 
