@@ -33,9 +33,10 @@
 #
 # Represents the result of matching a {@link ParseTree} against a tree pattern.
 #
-from io import StringIO
+from antlr4._compat import py2_unicode_compat
 
 
+@py2_unicode_compat
 class ParseTreeMatch(object):
 
     #
@@ -132,14 +133,5 @@ class ParseTreeMatch(object):
     # {@inheritDoc}
     #
     def __str__(self):
-        return unicode(self)
-
-
-    def __unicode__(self):
-        with StringIO() as buf:
-            buf.write(u"Match ")
-            buf.write(u"succeeded" if self.succeeded() else "failed")
-            buf.write(u"; found ")
-            buf.write(unicode(len(self.labels)))
-            buf.write(u" labels")
-            return buf.getvalue()
+        return u"Match %s; found %d labels" % (
+            u"succeeded" if self.succeeded() else u"failed", len(self.labels))

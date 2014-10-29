@@ -31,8 +31,10 @@
 from antlr4.atn.ATNConfigSet import ATNConfigSet
 from antlr4.dfa.DFAState import DFAState
 from antlr4.error.Errors import IllegalStateException
+from antlr4._compat import py2_unicode_compat, text_type
 
 
+@py2_unicode_compat
 class DFA(object):
 
     def __init__(self, atnStartState, decision=0):
@@ -129,22 +131,19 @@ class DFA(object):
         return sorted(self._states.keys(), key=lambda state: state.stateNumber)
 
     def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
         return self.toString(None)
 
     def toString(self, tokenNames=None):
         if self.s0 is None:
-            return ""
+            return u""
         from antlr4.dfa.DFASerializer import DFASerializer
         serializer = DFASerializer(self,tokenNames)
-        return unicode(serializer)
+        return text_type(serializer)
 
     def toLexerString(self):
         if self.s0 is None:
-            return ""
+            return u""
         from antlr4.dfa.DFASerializer import LexerDFASerializer
         serializer = LexerDFASerializer(self)
-        return unicode(serializer)
+        return text_type(serializer)
 

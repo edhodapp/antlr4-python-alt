@@ -2,6 +2,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -32,14 +33,13 @@
 # The basic notion of a tree has a parent, a payload, and a list of children.
 #  It is the most abstract interface for all the trees used by ANTLR.
 #/
+from antlr4._compat import py2_unicode_compat
 from antlr4.Token import Token
 
 INVALID_INTERVAL = (-1, -2)
 
 class Tree(object):
-
-    def __str__(self):
-        return unicode(self)
+    pass
 
 class SyntaxTree(Tree):
     pass
@@ -102,6 +102,7 @@ class ParseTreeListener(object):
     def exitEveryRule(self, ctx):
         pass
 
+@py2_unicode_compat
 class TerminalNodeImpl(TerminalNode):
 
     def __init__(self, symbol):
@@ -135,9 +136,9 @@ class TerminalNodeImpl(TerminalNode):
     def getText(self):
         return self.symbol.text
 
-    def __unicode__(self):
+    def __str__(self):
         if self.symbol.type == Token.EOF:
-            return "<EOF>"
+            return u"<EOF>"
         else:
             return self.symbol.text
 

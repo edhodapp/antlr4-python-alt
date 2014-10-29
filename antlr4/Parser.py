@@ -36,6 +36,8 @@ from antlr4.atn.ATNDeserializationOptions import ATNDeserializationOptions
 from antlr4.error.Errors import UnsupportedOperationException
 from antlr4.tree.ParseTreePatternMatcher import ParseTreePatternMatcher
 from antlr4.tree.Tree import ParseTreeListener
+from antlr4._compat import text_type
+
 
 class TraceListener(ParseTreeListener):
     
@@ -540,7 +542,7 @@ class Parser (Recognizer):
 
     # For debugging and other purposes.#
     def getDFAStrings(self):
-        return [ unicode(dfa) for dfa in self._interp.decisionToDFA]
+        return [text_type(dfa) for dfa in self._interp.decisionToDFA]
 
     # For debugging and other purposes.#
     def dumpDFA(self):

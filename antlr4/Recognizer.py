@@ -28,7 +28,7 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-from __builtin__ import unicode
+from antlr4._compat import text_type
 from antlr4.Token import Token
 from antlr4.error.ErrorListener import ProxyErrorListener, ConsoleErrorListener
 
@@ -103,7 +103,7 @@ class Recognizer(object):
     def getErrorHeader(self, e):
         line = e.getOffendingToken().line
         column = e.getOffendingToken().column
-        return u"line " + unicode(line) + u":" + unicode(column)
+        return u"line %d:%d" % (line, column)
 
 
     # How should a token be displayed in an error message? The default
@@ -127,7 +127,7 @@ class Recognizer(object):
             if t.type==Token.EOF:
                 s = u"<EOF>"
             else:
-                s = u"<" + unicode(t.type) + u">"
+                s = u"<" + text_type(t.type) + u">"
         s = s.replace(u"\n",u"\\n")
         s = s.replace(u"\r",u"\\r")
         s = s.replace(u"\t",u"\\t")

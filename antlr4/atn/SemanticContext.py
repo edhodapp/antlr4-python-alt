@@ -3,6 +3,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -36,7 +37,7 @@
 #  <p>I have scoped the {@link AND}, {@link OR}, and {@link Predicate} subclasses of
 #  {@link SemanticContext} within the scope of this outer class.</p>
 #
-from io import StringIO
+from antlr4._compat import py2_unicode_compat, text_type
 
 
 class SemanticContext(object):
@@ -83,12 +84,6 @@ class SemanticContext(object):
     def evalPrecedence(self, parser, outerContext):
         return self
 
-    def __str__(self):
-        return unicode(self)
-    
-    def __unicode__(self):
-        return unicode(super(SemanticContext, self))
-
 
 def andContext(a, b):
     if a is None or a is SemanticContext.NONE:
@@ -124,6 +119,7 @@ def filterPrecedencePredicates(collection):
     return result
 
 
+@py2_unicode_compat
 class Predicate(SemanticContext):
 
     def __init__(self, ruleIndex=-1, predIndex=-1, isCtxDependent=False):
@@ -147,8 +143,8 @@ class Predicate(SemanticContext):
                self.predIndex == other.predIndex and \
                self.isCtxDependent == other.isCtxDependent
 
-    def __unicode__(self):
-        return u"{" + unicode(self.ruleIndex) + u":" + unicode(self.predIndex) + u"}?"
+    def __str__(self):
+        return u"{" + text_type(self.ruleIndex) + u":" + text_type(self.predIndex) + u"}?"
 
 
 class PrecedencePredicate(SemanticContext):
@@ -182,6 +178,7 @@ class PrecedencePredicate(SemanticContext):
 # A semantic context which is true whenever none of the contained contexts
 # is false.
 #
+@py2_unicode_compat
 class AND(SemanticContext):
 
     def __init__(self, a, b):
@@ -255,20 +252,14 @@ class AND(SemanticContext):
 
         return result
 
-    def __unicode__(self):
-        with StringIO() as buf:
-            first = True
-            for o in self.opnds:
-                if not first:
-                    buf.write(u"&&")
-                buf.write(unicode(o))
-                first = False
-            return buf.getvalue()
+    def __str__(self):
+        return u"&&".join(text_type(o) for o in self.opnds)
 
 #
 # A semantic context which is true whenever at least one of the contained
 # contexts is true.
 #
+@py2_unicode_compat
 class OR (SemanticContext):
 
     def __init__(self, a, b):
@@ -340,15 +331,8 @@ class OR (SemanticContext):
 
         return result
 
-    def __unicode__(self):
-        with StringIO() as buf:
-            first = True
-            for o in self.opnds:
-                if not first:
-                    buf.write(u"||")
-                buf.write(unicode(o))
-                first = False
-            return buf.getvalue()
+    def __str__(self):
+        return u"||".join(text_type(o) for o in self.opnds)
 
 
 SemanticContext.NONE = Predicate()

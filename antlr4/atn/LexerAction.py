@@ -3,6 +3,7 @@
  # Copyright (c) 2013 Terence Parr
  # Copyright (c) 2013 Sam Harwell
  # Copyright (c) 2014 Eric Vergnaud
+ # Copyright (c) 2014 Brian Kearns
  # All rights reserved.
  #
  # Redistribution and use in source and binary forms, with or without
@@ -28,6 +29,7 @@
  # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  #
+from antlr4._compat import py2_unicode_compat, text_type
 
 class LexerActionType(object):
 
@@ -48,6 +50,7 @@ class LexerAction(object):
 #
 # <p>The {@code skip} command does not have any parameters, so this action is
 # implemented as a singleton instance exposed by {@link #INSTANCE}.</p>
+@py2_unicode_compat
 class LexerSkipAction(LexerAction ):
     actionType = LexerActionType.SKIP
 
@@ -57,13 +60,14 @@ class LexerSkipAction(LexerAction ):
     def execute(self, lexer):
         lexer.skip()
 
-    def __unicode__(self):
+    def __str__(self):
         return u"skip"
 
 LexerSkipAction.INSTANCE = LexerSkipAction()
 
 #  Implements the {@code type} lexer action by calling {@link Lexer#setType}
 # with the assigned type.
+@py2_unicode_compat
 class LexerTypeAction(LexerAction):
     actionType = LexerActionType.TYPE
 
@@ -84,12 +88,13 @@ class LexerTypeAction(LexerAction):
         else:
             return self.type == other.type
 
-    def __unicode__(self):
-        return u"type(" + unicode(self.type) + u")"
+    def __str__(self):
+        return u"type(" + text_type(self.type) + u")"
 
 
 # Implements the {@code pushMode} lexer action by calling
 # {@link Lexer#pushMode} with the assigned mode.
+@py2_unicode_compat
 class LexerPushModeAction(LexerAction):
     actionType = LexerActionType.PUSH_MODE
 
@@ -112,14 +117,15 @@ class LexerPushModeAction(LexerAction):
         else:
             return self.mode == other.mode
 
-    def __unicode__(self):
-        return u"pushMode(" + unicode(self.mode) + u")"
+    def __str__(self):
+        return u"pushMode(" + text_type(self.mode) + u")"
 
 
 # Implements the {@code popMode} lexer action by calling {@link Lexer#popMode}.
 #
 # <p>The {@code popMode} command does not have any parameters, so this action is
 # implemented as a singleton instance exposed by {@link #INSTANCE}.</p>
+@py2_unicode_compat
 class LexerPopModeAction(LexerAction):
     actionType = LexerActionType.POP_MODE
 
@@ -129,8 +135,8 @@ class LexerPopModeAction(LexerAction):
     def execute(self, lexer):
         lexer.popMode()
 
-    def __unicode__(self):
-        return "popMode"
+    def __str__(self):
+        return u"popMode"
 
 LexerPopModeAction.INSTANCE = LexerPopModeAction()
 
@@ -138,6 +144,7 @@ LexerPopModeAction.INSTANCE = LexerPopModeAction()
 #
 # <p>The {@code more} command does not have any parameters, so this action is
 # implemented as a singleton instance exposed by {@link #INSTANCE}.</p>
+@py2_unicode_compat
 class LexerMoreAction(LexerAction):
     actionType = LexerActionType.MORE
 
@@ -147,13 +154,14 @@ class LexerMoreAction(LexerAction):
     def execute(self, lexer):
         lexer.more()
 
-    def __unicode__(self):
-        return "more"
+    def __str__(self):
+        return u"more"
 
 LexerMoreAction.INSTANCE = LexerMoreAction()
 
 # Implements the {@code mode} lexer action by calling {@link Lexer#mode} with
 # the assigned mode.
+@py2_unicode_compat
 class LexerModeAction(LexerAction):
     actionType = LexerActionType.MODE
 
@@ -176,8 +184,8 @@ class LexerModeAction(LexerAction):
         else:
             return self.mode == other.mode
 
-    def __unicode__(self):
-        return u"mode(" + unicode(self.mode) + u")"
+    def __str__(self):
+        return u"mode(" + text_type(self.mode) + u")"
 
 # Executes a custom lexer action by calling {@link Recognizer#action} with the
 # rule and action indexes assigned to the custom action. The implementation of
@@ -222,6 +230,7 @@ class LexerCustomAction(LexerAction):
 
 # Implements the {@code channel} lexer action by calling
 # {@link Lexer#setChannel} with the assigned channel.
+@py2_unicode_compat
 class LexerChannelAction(LexerAction):
     actionType = LexerActionType.CHANNEL
 
@@ -246,8 +255,8 @@ class LexerChannelAction(LexerAction):
         else:
             return self.channel == other.channel
 
-    def __unicode__(self):
-        return u"channel(" + unicode(self.channel) + u")"
+    def __str__(self):
+        return u"channel(" + text_type(self.channel) + u")"
 
 # This implementation of {@link LexerAction} is used for tracking input offsets
 # for position-dependent actions within a {@link LexerActionExecutor}.

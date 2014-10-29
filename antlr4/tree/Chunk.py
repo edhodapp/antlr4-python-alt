@@ -1,26 +1,26 @@
+from antlr4._compat import py2_unicode_compat
+
+
 class Chunk(object):
-
-   def __str__(self):
-        return unicode(self)
+    pass
 
 
+@py2_unicode_compat
 class TagChunk(Chunk):
-
     def __init__(self, tag, label=None):
         self.tag = tag
         self.label = label
 
-    def __unicode__(self):
-        if self.label is None:
-            return self.tag
-        else:
-            return self.label + ":" + self.tag
+    def __str__(self):
+        if self.label is not None:
+            return self.label + u":" + self.tag
+        return self.tag
 
+
+@py2_unicode_compat
 class TextChunk(Chunk):
-
     def __init__(self, text):
         self.text = text
 
-    def __unicode__(self):
-        return "'" + self.text + "'"
-
+    def __str__(self):
+        return u"'" + self.text + u"'"

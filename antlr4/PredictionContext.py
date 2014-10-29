@@ -3,6 +3,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -28,7 +29,7 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #/
-from io import StringIO
+from antlr4._compat import py2_unicode_compat, text_type
 from antlr4.RuleContext import RuleContext
 from antlr4.atn.ATNState import ATNState
 
@@ -83,9 +84,6 @@ class PredictionContext(object):
     def __hash__(self):
         return self.cachedHashCode
 
-    def __str__(self):
-        return unicode(self)
-
 
 def calculateHashCode(parent, returnState):
     return hash((parent, returnState))
@@ -123,6 +121,7 @@ class PredictionContextCache(object):
         return len(self.cache)
 
 
+@py2_unicode_compat
 class SingletonPredictionContext(PredictionContext):
 
     @staticmethod
@@ -165,17 +164,18 @@ class SingletonPredictionContext(PredictionContext):
 
     __hash__ = PredictionContext.__hash__
 
-    def __unicode__(self):
-        up = "" if self.parentCtx is None else unicode(self.parentCtx)
+    def __str__(self):
+        up = u"" if self.parentCtx is None else text_type(self.parentCtx)
         if len(up)==0:
             if self.returnState == self.EMPTY_RETURN_STATE:
                 return u"$"
             else:
-                return unicode(self.returnState)
+                return text_type(self.returnState)
         else:
-            return unicode(self.returnState) + u" " + up
+            return text_type(self.returnState) + u" " + up
 
 
+@py2_unicode_compat
 class EmptyPredictionContext(SingletonPredictionContext):
 
     def __init__(self):
@@ -193,12 +193,15 @@ class EmptyPredictionContext(SingletonPredictionContext):
     def __eq__(self, other):
         return self is other
 
-    def __unicode__(self):
-        return "$"
+    __hash__ = PredictionContext.__hash__
+
+    def __str__(self):
+        return u"$"
 
 
 PredictionContext.EMPTY = EmptyPredictionContext()
 
+@py2_unicode_compat
 class ArrayPredictionContext(PredictionContext):
     # Parent can be null only if full ctx mode and we make an array
     #  from {@link #EMPTY} and non-empty. We merge {@link #EMPTY} by using null parent and
@@ -236,25 +239,27 @@ class ArrayPredictionContext(PredictionContext):
         else:
             return self.returnStates==other.returnStates and self.parents==other.parents
 
-    def __unicode__(self):
+    __hash__ = PredictionContext.__hash__
+
+    def __str__(self):
         if self.isEmpty():
-            return "[]"
-        with StringIO() as buf:
-            buf.write(u"[")
-            for i in range(0,len(self.returnStates)):
-                if i>0:
-                    buf.write(u", ")
-                if self.returnStates[i]==PredictionContext.EMPTY_RETURN_STATE:
-                    buf.write(u"$")
-                    continue
-                buf.write(unicode(self.returnStates[i]))
-                if self.parents[i] is not None:
-                    buf.write(u' ')
-                    buf.write(unicode(self.parents[i]))
-                else:
-                    buf.write(u"null")
-            buf.write(u"]")
-            return buf.getvalue()
+            return u"[]"
+        buf = []
+        buf.append(u"[")
+        for i in range(0,len(self.returnStates)):
+            if i>0:
+                buf.append(u", ")
+            if self.returnStates[i]==PredictionContext.EMPTY_RETURN_STATE:
+                buf.append(u"$")
+                continue
+            buf.append(text_type(self.returnStates[i]))
+            if self.parents[i] is not None:
+                buf.append(u' ')
+                buf.append(text_type(self.parents[i]))
+            else:
+                buf.append(u"null")
+        buf.append(u"]")
+        return u"".join(buf)
 
 
 #  Convert a {@link RuleContext} tree to a {@link PredictionContext} graph.
@@ -275,15 +280,6 @@ def PredictionContextFromRuleContext(atn, outerContext=None):
     transition = state.transitions[0]
     return SingletonPredictionContext.create(parent, transition.followState.stateNumber)
 
-
-def calculateListsHashCode(parents, returnStates ):
-
-    with StringIO() as s:
-        for parent in parents:
-            s.write(unicode(parent))
-        for returnState in returnStates:
-            s.write(unicode(returnState))
-        return hash(s.getvalue())
 
 def merge(a, b, rootIsWildcard, mergeCache):
     assert a is not None and b is not None # must be empty context, never null

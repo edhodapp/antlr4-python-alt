@@ -3,6 +3,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -49,9 +50,9 @@
 # this situation occurs.</li>
 # </ul>
 
-from io import StringIO
 from antlr4.Utils import str_set
 from antlr4.error.ErrorListener import ErrorListener
+from antlr4._compat import text_type
 
 class DiagnosticErrorListener(ErrorListener):
 
@@ -64,36 +65,28 @@ class DiagnosticErrorListener(ErrorListener):
         if self.exactOnly and not exact:
             return
 
-        with StringIO() as buf:
-            buf.write(u"reportAmbiguity d=")
-            buf.write(self.getDecisionDescription(recognizer, dfa))
-            buf.write(u": ambigAlts=")
-            buf.write(str_set(self.getConflictingAlts(ambigAlts, configs)))
-            buf.write(u", input='")
-            buf.write(recognizer.getTokenStream().getText((startIndex, stopIndex)))
-            buf.write(u"'")
-            recognizer.notifyErrorListeners(buf.getvalue())
-
+        format = u"reportAmbiguity d=%s: ambigAlts=%s, input='%s'"
+        decision = self.getDecisionDescription(recognizer, dfa)
+        conflictingAlts = str_set(self.getConflictingAlts(ambigAlts, configs))
+        text = recognizer.getTokenStream().getText((startIndex, stopIndex))
+        message = format % (decision, conflictingAlts, text)
+        recognizer.notifyErrorListeners(message)
 
     def reportAttemptingFullContext(self, recognizer, dfa, startIndex,
                        stopIndex, conflictingAlts, configs):
-        with StringIO() as buf:
-            buf.write(u"reportAttemptingFullContext d=")
-            buf.write(self.getDecisionDescription(recognizer, dfa))
-            buf.write(u", input='")
-            buf.write(recognizer.getTokenStream().getText((startIndex, stopIndex)))
-            buf.write(u"'")
-            recognizer.notifyErrorListeners(buf.getvalue())
+        format = u"reportAttemptingFullContext d=%s, input='%s'"
+        decision = self.getDecisionDescription(recognizer, dfa)
+        text = recognizer.getTokenStream().getText((startIndex, stopIndex))
+        message = format % (decision, text)
+        recognizer.notifyErrorListeners(message)
 
     def reportContextSensitivity(self, recognizer, dfa, startIndex,
                        stopIndex, prediction, configs):
-        with StringIO() as buf:
-            buf.write(u"reportContextSensitivity d=")
-            buf.write(self.getDecisionDescription(recognizer, dfa))
-            buf.write(u", input='")
-            buf.write(recognizer.getTokenStream().getText((startIndex, stopIndex)))
-            buf.write(u"'")
-            recognizer.notifyErrorListeners(buf.getvalue())
+        format = u"reportContextSensitivity d=%s, input='%s'"
+        decision = self.getDecisionDescription(recognizer, dfa)
+        text = recognizer.getTokenStream().getText((startIndex, stopIndex))
+        message = format % (decision, text)
+        recognizer.notifyErrorListeners(message)
 
     def getDecisionDescription(self, recognizer, dfa):
         decision = dfa.decision
@@ -101,13 +94,13 @@ class DiagnosticErrorListener(ErrorListener):
 
         ruleNames = recognizer.ruleNames
         if ruleIndex < 0 or ruleIndex >= len(ruleNames):
-            return unicode(decision)
+            return text_type(decision)
 
         ruleName = ruleNames[ruleIndex]
         if ruleName is None or len(ruleName)==0:
-            return unicode(decision)
+            return text_type(decision)
 
-        return unicode(decision) + u" (" + ruleName + u")"
+        return u"%d (%s)" % (decision, ruleName)
 
     #
     # Computes the set of conflicting or ambiguous alternatives from a

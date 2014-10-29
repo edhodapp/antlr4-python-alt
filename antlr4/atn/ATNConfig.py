@@ -3,6 +3,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -36,11 +37,12 @@
 #  the tree of semantic predicates encountered before reaching
 #  an ATN state.
 #/
-from io import StringIO
 from antlr4.atn.ATNState import ATNState, DecisionState
 from antlr4.atn.SemanticContext import SemanticContext
+from antlr4._compat import py2_unicode_compat, text_type
 
 
+@py2_unicode_compat
 class ATNConfig(object):
     def __init__(self, state=None, alt=None, context=None, semantic=None, config=None):
         if config is not None:
@@ -97,26 +99,23 @@ class ATNConfig(object):
                      self.semanticContext))
 
     def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
-        with StringIO() as buf:
-            buf.write(u"(")
-            buf.write(unicode(self.state))
-            buf.write(u",")
-            buf.write(unicode(self.alt))
-            if self.context is not None:
-                buf.write(u",[")
-                buf.write(unicode(self.context))
-                buf.write(u"]")
-            if self.semanticContext is not None and self.semanticContext is not SemanticContext.NONE:
-                buf.write(u",")
-                buf.write(unicode(self.semanticContext))
-            if self.reachesIntoOuterContext>0:
-                buf.write(u",up=")
-                buf.write(unicode(self.reachesIntoOuterContext))
-            buf.write(u')')
-            return buf.getvalue()
+        buf = []
+        buf.append(u"(")
+        buf.append(text_type(self.state))
+        buf.append(u",")
+        buf.append(text_type(self.alt))
+        if self.context is not None:
+            buf.append(u",[")
+            buf.append(text_type(self.context))
+            buf.append(u"]")
+        if self.semanticContext is not None and self.semanticContext is not SemanticContext.NONE:
+            buf.append(u",")
+            buf.append(text_type(self.semanticContext))
+        if self.reachesIntoOuterContext>0:
+            buf.append(u",up=")
+            buf.append(text_type(self.reachesIntoOuterContext))
+        buf.append(u')')
+        return u"".join(buf)
 
 
 class LexerATNConfig(ATNConfig):

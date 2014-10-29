@@ -2,6 +2,7 @@
 # Copyright (c) 2012 Terence Parr
 # Copyright (c) 2012 Sam Harwell
 # Copyright (c) 2014 Eric Vergnaud
+# Copyright (c) 2014 Brian Kearns
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -31,7 +32,7 @@
 # A token has properties: text, type, line, character position in the line
 # (so we can ignore tabs), token channel, index, and source from which
 # we obtained this token.
-from io import StringIO
+from antlr4._compat import py2_unicode_compat
 
 
 class Token (object):
@@ -91,10 +92,8 @@ class Token (object):
     def getInputStream(self):
         return self.source[1]
 
-    def __str__(self):
-        return unicode(self)
 
-
+@py2_unicode_compat
 class CommonToken(Token):
 
 
@@ -153,32 +152,17 @@ class CommonToken(Token):
     def text(self, text):
         self._text = text
 
-    def __unicode__(self):
-        with StringIO() as buf:
-            buf.write(u"[@")
-            buf.write(unicode(self.tokenIndex))
-            buf.write(u",")
-            buf.write(unicode(self.start))
-            buf.write(u":")
-            buf.write(unicode(self.stop))
-            buf.write(u"='")
-            txt = self.text
-            if txt is not None:
-                txt = txt.replace(u"\n",u"\\n")
-                txt = txt.replace(u"\r",u"\\r")
-                txt = txt.replace(u"\t",u"\\t")
-            else:
-                txt = u"<no text>"
-            buf.write(txt)
-            buf.write(u"',<")
-            buf.write(unicode(self.type))
-            buf.write(u">")
-            if self.channel > 0:
-                buf.write(u",channel=")
-                buf.write(unicode(self.channel))
-            buf.write(u",")
-            buf.write(unicode(self.line))
-            buf.write(u":")
-            buf.write(unicode(self.column))
-            buf.write(u"]")
-            return buf.getvalue()
+    def __str__(self):
+        channel_str = u""
+        if self.channel > 0:
+            channel_str = u",channel=%d" % self.channel
+        txt = self.text
+        if txt is not None:
+            txt = txt.replace(u"\n", u"\\n")
+            txt = txt.replace(u"\r", u"\\r")
+            txt = txt.replace(u"\t", u"\\t")
+        else:
+            txt = u"<no text>"
+        return u"[@%d,%d:%d='%s',<%d>%s,%d:%d]" % (
+            self.tokenIndex, self.start, self.stop, txt, self.type,
+            channel_str, self.line, self.column)

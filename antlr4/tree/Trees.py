@@ -31,10 +31,10 @@
 
 
 # A set of utility routines useful for all kinds of ANTLR trees.#
-from io import StringIO
 from antlr4.Token import Token
 from antlr4.Utils import escapeWhitespace
 from antlr4.tree.Tree import RuleNode, ErrorNode, TerminalNode
+from antlr4._compat import text_type
 
 class Trees(object):
 
@@ -48,16 +48,13 @@ class Trees(object):
         s = escapeWhitespace(cls.getNodeText(t, ruleNames), False)
         if t.getChildCount()==0:
             return s
-        with StringIO() as buf:
-            buf.write(u"(")
-            buf.write(s)
-            buf.write(u' ')
-            for i in range(0, t.getChildCount()):
-                if i > 0:
-                    buf.write(u' ')
-                buf.write(cls.toStringTree(t.getChild(i), ruleNames))
-            buf.write(u")")
-            return buf.getvalue()
+        buf = [u"(", s, u" "]
+        for i in range(0, t.getChildCount()):
+            if i > 0:
+                buf.append(u' ')
+            buf.append(cls.toStringTree(t.getChild(i), ruleNames))
+        buf.append(u")")
+        return u"".join(buf)
 
     @classmethod
     def getNodeText(cls, t, ruleNames=None, recog=None):
@@ -67,7 +64,7 @@ class Trees(object):
             if isinstance(t, RuleNode):
                 return ruleNames[t.getRuleContext().getRuleIndex()]
             elif isinstance( t, ErrorNode):
-                return unicode(t)
+                return text_type(t)
             elif isinstance(t, TerminalNode):
                 if t.symbol is not None:
                     return t.symbol.text
@@ -75,7 +72,7 @@ class Trees(object):
         payload = t.getPayload()
         if isinstance(payload, Token ):
             return payload.text
-        return unicode(t.getPayload())
+        return text_type(t.getPayload())
 
 
     # Return ordered list of all children of this node

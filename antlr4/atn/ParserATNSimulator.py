@@ -272,6 +272,7 @@ from antlr4.atn.SemanticContext import SemanticContext, AND, andContext, orConte
 from antlr4.atn.Transition import Transition, RuleTransition, ActionTransition, AtomTransition, SetTransition, NotSetTransition
 from antlr4.dfa.DFAState import DFAState, PredPrediction
 from antlr4.error.Errors import NoViableAltException
+from antlr4._compat import text_type
 
 
 class ParserATNSimulator(ATNSimulator):
@@ -1357,8 +1358,8 @@ class ParserATNSimulator(ATNSimulator):
                 print(str(t) + " ttype out of range: " + str_list(self.parser.tokenNames))
                 print(str_list(self.parser.getInputStream().getTokens()))
             else:
-                return self.parser.tokensNames[t] + u"<" + unicode(t) + ">"
-        return unicode(t)
+                return self.parser.tokensNames[t] + u"<" + text_type(t) + ">"
+        return text_type(t)
 
     def getLookaheadName(self, input):
         return self.getTokenName(input.LA(1))

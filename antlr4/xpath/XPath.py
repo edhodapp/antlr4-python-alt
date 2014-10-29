@@ -52,6 +52,7 @@ from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.Errors import LexerNoViableAltException
 from antlr4.tree.Tree import ParseTree
 from antlr4.tree.Trees import Trees
+from antlr4._compat import py2_unicode_compat
 
 
 class XPathLexer(Lexer):
@@ -231,6 +232,7 @@ class XPath(object):
         return work
 
 
+@py2_unicode_compat
 class XPathElement(object):
 
     def __init__(self, nodeName):
@@ -238,10 +240,7 @@ class XPathElement(object):
         self.invert = False
 
     def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
-        return type(self).__name__ + "[" + ("!" if self.invert else "") + self.nodeName + "]"
+        return type(self).__name__ + u"[" + (u"!" if self.invert else u"") + self.nodeName + u"]"
 
 
 

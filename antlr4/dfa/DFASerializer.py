@@ -3,6 +3,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -30,10 +31,11 @@
 #/
 
 # A DFA walker that knows how to dump them to serialized strings.#/
-from io import StringIO
 from antlr4.Utils import str_list
+from antlr4._compat import py2_unicode_compat, text_type, unichr
 
 
+@py2_unicode_compat
 class DFASerializer(object):
 
     def __init__(self, dfa, tokenNames=None):
@@ -41,31 +43,24 @@ class DFASerializer(object):
         self.tokenNames = tokenNames
 
     def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
         if self.dfa.s0 is None:
             return None
-        with StringIO() as buf:
-            for s in self.dfa.sortedStates():
-                n = 0
-                if s.edges is not None:
-                    n = len(s.edges)
-                for i in range(0, n):
-                    t = s.edges[i]
-                    if t is not None and t.stateNumber != 0x7FFFFFFF:
-                        buf.write(self.getStateString(s))
-                        label = self.getEdgeLabel(i)
-                        buf.write(u"-")
-                        buf.write(label)
-                        buf.write(u"->")
-                        buf.write(self.getStateString(t))
-                        buf.write(u'\n')
-            output = buf.getvalue()
-            if len(output)==0:
-                return None
-            else:
-                return output
+        buf = []
+        for s in self.dfa.sortedStates():
+            n = 0
+            if s.edges is not None:
+                n = len(s.edges)
+            for i in range(0, n):
+                t = s.edges[i]
+                if t is not None and t.stateNumber != 0x7FFFFFFF:
+                    buf.append(self.getStateString(s))
+                    label = self.getEdgeLabel(i)
+                    buf.append(u"-%s->%s\n" % (label, self.getStateString(t)))
+        output = u"".join(buf)
+        if len(output)==0:
+            return None
+        else:
+            return output
 
     def getEdgeLabel(self, i):
         if i==0:
@@ -73,17 +68,18 @@ class DFASerializer(object):
         if self.tokenNames is not None:
             return self.tokenNames[i-1]
         else:
-            return unicode(i-1)
+            return text_type(i-1)
 
     def getStateString(self, s):
         n = s.stateNumber
-        baseStateStr = ( u":" if s.isAcceptState else u"") + u"s" + unicode(n) + \
-            ( u"^" if s.requiresFullContext else u"")
+        baseStateStr = ((u":" if s.isAcceptState else u"") +
+                        u"s" + text_type(n) +
+                        (u"^" if s.requiresFullContext else u""))
         if s.isAcceptState:
             if s.predicates is not None:
                 return baseStateStr + u"=>" + str_list(s.predicates)
             else:
-                return baseStateStr + u"=>" + unicode(s.prediction)
+                return baseStateStr + u"=>" + text_type(s.prediction)
         else:
             return baseStateStr
 

@@ -3,6 +3,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -41,10 +42,10 @@
 #  the states. We'll use the term Edge for the DFA to distinguish them from
 #  ATN transitions.</p>
 #
-from __builtin__ import unicode
 from antlr4.IntervalSet import IntervalSet, Interval
 from antlr4.Token import Token
 from antlr4.atn.SemanticContext import Predicate, PrecedencePredicate
+from antlr4._compat import py2_unicode_compat, text_type
 
 class Transition (object):
     # constants for serialization
@@ -84,11 +85,9 @@ class Transition (object):
         self.isEpsilon = False
         self.label = None
 
-    def __str__(self):
-        return unicode(self)
-
 
 # TODO: make all transitions sets? no, should remove set edges
+@py2_unicode_compat
 class AtomTransition(Transition):
 
     def __init__(self, target, label):
@@ -105,8 +104,8 @@ class AtomTransition(Transition):
     def matches( self, symbol, minVocabSymbol,  maxVocabSymbol):
         return self.label_ == symbol
 
-    def __unicode__(self):
-        return unicode(self.label_)
+    def __str__(self):
+        return u"%d" % self.label_
 
 class RuleTransition(Transition):
 
@@ -122,6 +121,7 @@ class RuleTransition(Transition):
         return False
 
 
+@py2_unicode_compat
 class EpsilonTransition(Transition):
 
     def __init__(self, target):
@@ -132,9 +132,10 @@ class EpsilonTransition(Transition):
     def matches( self, symbol, minVocabSymbol,  maxVocabSymbol):
         return False
 
-    def __unicode__(self):
-        return "epsilon"
+    def __str__(self):
+        return u"epsilon"
 
+@py2_unicode_compat
 class RangeTransition(Transition):
 
     def __init__(self, target, start, stop):
@@ -152,8 +153,8 @@ class RangeTransition(Transition):
     def matches( self, symbol, minVocabSymbol,  maxVocabSymbol):
         return symbol >= self.start and symbol <= self.stop
 
-    def __unicode__(self):
-        return "'" + chr(self.start) + "'..'" + chr(self.stop) + "'"
+    def __str__(self):
+        return u"'%d'..'%d'" % (self.start, self.stop)
 
 class AbstractPredicateTransition(Transition):
 
@@ -161,6 +162,7 @@ class AbstractPredicateTransition(Transition):
         super(AbstractPredicateTransition, self).__init__(target)
 
 
+@py2_unicode_compat
 class PredicateTransition(AbstractPredicateTransition):
 
     def __init__(self, target, ruleIndex, predIndex, isCtxDependent):
@@ -177,9 +179,10 @@ class PredicateTransition(AbstractPredicateTransition):
     def getPredicate(self):
         return Predicate(self.ruleIndex, self.predIndex, self.isCtxDependent)
 
-    def __unicode__(self):
-        return u"pred_" + unicode(self.ruleIndex) + u":" + unicode(self.predIndex)
+    def __str__(self):
+        return u"pred_" + text_type(self.ruleIndex) + u":" + text_type(self.predIndex)
 
+@py2_unicode_compat
 class ActionTransition(Transition):
 
     def __init__(self, target, ruleIndex, actionIndex=-1, isCtxDependent=False):
@@ -193,10 +196,11 @@ class ActionTransition(Transition):
     def matches( self, symbol, minVocabSymbol,  maxVocabSymbol):
         return False
 
-    def __unicode__(self):
-        return u"action_" + unicode(self.ruleIndex) + u":" + unicode(self.actionIndex)
+    def __str__(self):
+        return u"action_" + text_type(self.ruleIndex) + u":" + text_type(self.actionIndex)
 
 # A transition containing a set of values.
+@py2_unicode_compat
 class SetTransition(Transition):
 
     def __init__(self, target, set):
@@ -211,9 +215,10 @@ class SetTransition(Transition):
     def matches( self, symbol, minVocabSymbol,  maxVocabSymbol):
         return symbol in self.label
 
-    def __unicode__(self):
-        return unicode(self.label)
+    def __str__(self):
+        return text_type(self.label)
 
+@py2_unicode_compat
 class NotSetTransition(SetTransition):
 
     def __init__(self, target, set):
@@ -225,10 +230,11 @@ class NotSetTransition(SetTransition):
             and symbol <= maxVocabSymbol \
             and not super(type(self), self).matches(symbol, minVocabSymbol, maxVocabSymbol)
 
-    def __unicode__(self):
-        return u'~' + super(type(self), self).__unicode__()
+    def __str__(self):
+        return u'~' + text_type(self.label)
 
 
+@py2_unicode_compat
 class WildcardTransition(Transition):
 
     def __init__(self, target):
@@ -238,10 +244,11 @@ class WildcardTransition(Transition):
     def matches( self, symbol, minVocabSymbol,  maxVocabSymbol):
         return symbol >= minVocabSymbol and symbol <= maxVocabSymbol
 
-    def __unicode__(self):
+    def __str__(self):
         return u"."
 
 
+@py2_unicode_compat
 class PrecedencePredicateTransition(AbstractPredicateTransition):
 
     def __init__(self, target, precedence):
@@ -257,8 +264,8 @@ class PrecedencePredicateTransition(AbstractPredicateTransition):
     def getPredicate(self):
         return PrecedencePredicate(self.precedence)
 
-    def __unicode__(self):
-        return self.precedence + " >= _p"
+    def __str__(self):
+        return self.precedence + u" >= _p"
 
 
 Transition.serializationTypes = {

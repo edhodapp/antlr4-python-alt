@@ -3,6 +3,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -33,14 +34,15 @@
 # info about the set, with support for combining similar configurations using a
 # graph-structured stack.
 #/
-from io import StringIO
 from antlr4.PredictionContext import PredictionContext, merge
 from antlr4.Utils import str_list
 from antlr4.atn.ATN import ATN
 from antlr4.atn.SemanticContext import SemanticContext
 from antlr4.error.Errors import UnsupportedOperationException, IllegalStateException
+from antlr4._compat import py2_unicode_compat, text_type
 
 
+@py2_unicode_compat
 class ATNConfigSet(object):
     #
     # The reason that we need this is because we don't want the hash map to use
@@ -203,23 +205,20 @@ class ATNConfigSet(object):
         self.configLookup = None # can't mod, no need for lookup cache
 
     def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
-        with StringIO() as buf:
-            buf.write(str_list(self.configs))
-            if self.hasSemanticContext:
-                buf.write(u",hasSemanticContext=")
-                buf.write(unicode(self.hasSemanticContext))
-            if self.uniqueAlt!=ATN.INVALID_ALT_NUMBER:
-                buf.write(u",uniqueAlt=")
-                buf.write(unicode(self.uniqueAlt))
-            if self.conflictingAlts is not None:
-                buf.write(u",conflictingAlts=")
-                buf.write(unicode(self.conflictingAlts))
-            if self.dipsIntoOuterContext:
-                buf.write(u",dipsIntoOuterContext")
-            return buf.getvalue()
+        buf = []
+        buf.append(str_list(self.configs))
+        if self.hasSemanticContext:
+            buf.append(u",hasSemanticContext=")
+            buf.append(text_type(self.hasSemanticContext))
+        if self.uniqueAlt!=ATN.INVALID_ALT_NUMBER:
+            buf.append(u",uniqueAlt=")
+            buf.append(text_type(self.uniqueAlt))
+        if self.conflictingAlts is not None:
+            buf.append(u",conflictingAlts=")
+            buf.append(text_type(self.conflictingAlts))
+        if self.dipsIntoOuterContext:
+            buf.append(u",dipsIntoOuterContext")
+        return u"".join(buf)
 
 
 class OrderedATNConfigSet(ATNConfigSet):

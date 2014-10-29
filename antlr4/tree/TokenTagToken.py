@@ -34,9 +34,11 @@
 # {@code <ID>}. These tokens are created for {@link TagChunk} chunks where the
 # tag corresponds to a lexer rule or token type.
 #
+from antlr4._compat import py2_unicode_compat
 from antlr4.Token import CommonToken
 
 
+@py2_unicode_compat
 class TokenTagToken(CommonToken):
 
     # Constructs a new instance of {@link TokenTagToken} with the specified
@@ -68,5 +70,5 @@ class TokenTagToken(CommonToken):
     # <p>The implementation for {@link TokenTagToken} returns a string of the form
     # {@code tokenName:type}.</p>
     #
-    def __unicode__(self):
-        return self.tokenName + u":" + unicode(self.type)
+    def __str__(self):
+        return u"%s:%d" % (self.tokenName, self.type)

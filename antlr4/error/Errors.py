@@ -27,7 +27,9 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #/
+from antlr4 import Utils
 from antlr4.atn.Transition import PredicateTransition
+from antlr4._compat import py2_unicode_compat
 
 
 class UnsupportedOperationException(Exception):
@@ -94,10 +96,8 @@ class RecognitionException(Exception):
         else:
             return None
 
-    def __str__(self):
-        return unicode(self)
 
-
+@py2_unicode_compat
 class LexerNoViableAltException(RecognitionException):
 
     def __init__(self, lexer, input, startIndex, deadEndConfigs):
@@ -105,12 +105,12 @@ class LexerNoViableAltException(RecognitionException):
         self.startIndex = startIndex
         self.deadEndConfigs = deadEndConfigs
 
-    def __unicode__(self):
-        symbol = ""
+    def __str__(self):
+        symbol = u""
         if self.startIndex >= 0 and self.startIndex < self.input.size():
             symbol = self.input.getText((self.startIndex,self.startIndex))
-            # TODO symbol = Utils.escapeWhitespace(symbol, false);
-        return u"LexerNoViableAltException" + symbol
+            symbol = Utils.escapeWhitespace(symbol, False)
+        return u"%s('%s')" % (self.__class__.__name__, symbol)
 
 # Indicates that the parser could not decide which of two or more paths
 #  to take based upon the remaining input. It tracks the starting token

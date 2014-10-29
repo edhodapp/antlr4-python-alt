@@ -1,5 +1,6 @@
 from io import StringIO
 import unittest
+from antlr4._compat import xrange
 from antlr4.Token import Token
 
 class Interval(object):

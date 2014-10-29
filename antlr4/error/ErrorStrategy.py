@@ -33,6 +33,7 @@ from antlr4.IntervalSet import IntervalSet
 from antlr4.Token import Token
 from antlr4.atn.ATNState import ATNState
 from antlr4.error.Errors import NoViableAltException, InputMismatchException, FailedPredicateException, ParseCancellationException
+from antlr4._compat import text_type
 
 class ErrorStrategy(object):
 
@@ -539,7 +540,7 @@ class DefaultErrorStrategy(ErrorStrategy):
             if t.type==Token.EOF:
                 s = u"<EOF>"
             else:
-                s = u"<" + unicode(t.type) + u">"
+                s = u"<" + text_type(t.type) + u">"
         return self.escapeWSAndQuote(s)
 
     def escapeWSAndQuote(self, s):

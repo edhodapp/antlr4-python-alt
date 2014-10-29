@@ -2,6 +2,7 @@
 #  Copyright (c) 2013 Terence Parr
 #  Copyright (c) 2013 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -49,10 +50,11 @@
 #
 #  @see ParserRuleContext
 #/
-from io import StringIO
+from antlr4._compat import py2_unicode_compat, text_type
 from antlr4.tree.Tree import RuleNode, INVALID_INTERVAL
 from antlr4.tree.Trees import Trees
 
+@py2_unicode_compat
 class RuleContext(RuleNode):
 
     EMPTY = None
@@ -101,10 +103,7 @@ class RuleContext(RuleNode):
     def getText(self):
         if self.getChildCount() == 0:
             return u""
-        with StringIO() as builder:
-            for child in self.getChildren():
-                builder.write(child.getText())
-            return builder.getvalue()
+        return u"".join(child.getText() for child in self.getChildren())
 
     def getRuleIndex(self):
         return -1
@@ -186,7 +185,7 @@ class RuleContext(RuleNode):
    #      return toStringTree((List<String>)null);
    #  }
    #
-    def __unicode__(self):
+    def __str__(self):
         return self.toString(None, None)
 
    #  @Override
@@ -210,23 +209,23 @@ class RuleContext(RuleNode):
    #  }
 
     def toString(self, ruleNames, stop):
-        with StringIO() as buf:
-            p = self
-            buf.write(u"[")
-            while p is not None and p is not stop:
-                if ruleNames is None:
-                    if not p.isEmpty():
-                        buf.write(unicode(p.invokingState))
-                else:
-                    ri = p.getRuleIndex()
-                    ruleName = ruleNames[ri] if ri >= 0 and ri < len(ruleNames) else unicode(ri)
-                    buf.write(ruleName)
+        buf = []
+        p = self
+        buf.append(u"[")
+        while p is not None and p is not stop:
+            if ruleNames is None:
+                if not p.isEmpty():
+                    buf.append(text_type(p.invokingState))
+            else:
+                ri = p.getRuleIndex()
+                ruleName = ruleNames[ri] if ri >= 0 and ri < len(ruleNames) else text_type(ri)
+                buf.append(ruleName)
 
-                if p.parentCtx is not None and (ruleNames is not None or not p.parentCtx.isEmpty()):
-                    buf.write(u" ")
+            if p.parentCtx is not None and (ruleNames is not None or not p.parentCtx.isEmpty()):
+                buf.append(u" ")
 
-                p = p.parentCtx
+            p = p.parentCtx
 
-            buf.write(u"]")
-            return buf.getvalue()
+        buf.append(u"]")
+        return u''.join(buf)
 

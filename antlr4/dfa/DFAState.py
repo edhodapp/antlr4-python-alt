@@ -3,6 +3,7 @@
 #  Copyright (c) 2012 Terence Parr
 #  Copyright (c) 2012 Sam Harwell
 #  Copyright (c) 2014 Eric Vergnaud
+#  Copyright (c) 2014 Brian Kearns
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -30,19 +31,17 @@
 #/
 
 # Map a predicate to a predicted alternative.#/
-from io import StringIO
 from antlr4.atn.ATNConfigSet import ATNConfigSet
+from antlr4._compat import py2_unicode_compat, text_type
 
+@py2_unicode_compat
 class PredPrediction(object):
     def __init__(self, pred, alt):
         self.alt = alt
         self.pred = pred
 
     def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
-        return u"(" + unicode(self.pred) + u", " + unicode(self.alt) +  u")"
+        return u"(" + text_type(self.pred) + u", " + text_type(self.alt) +  u")"
 
 # A DFA state represents a set of possible ATN configurations.
 #  As Aho, Sethi, Ullman p. 117 says "The DFA uses its state
@@ -68,6 +67,7 @@ class PredPrediction(object):
 #  but with different ATN contexts (with same or different alts)
 #  meaning that state was reached via a different set of rule invocations.</p>
 #/
+@py2_unicode_compat
 class DFAState(object):
 
     def __init__(self, stateNumber=-1, configs=ATNConfigSet()):
@@ -138,17 +138,14 @@ class DFAState(object):
             return self.configs==other.configs
 
     def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
-        with StringIO() as buf:
-            buf.write(unicode(self.stateNumber))
-            buf.write(u":")
-            buf.write(unicode(self.configs))
-            if self.isAcceptState:
-                buf.write(u"=>")
-                if self.predicates is not None:
-                    buf.write(unicode(self.predicates))
-                else:
-                    buf.write(unicode(self.prediction))
-            return buf.getvalue()
+        buf = []
+        buf.append(text_type(self.stateNumber))
+        buf.append(u":")
+        buf.append(text_type(self.configs))
+        if self.isAcceptState:
+            buf.append(u"=>")
+            if self.predicates is not None:
+                buf.append(text_type(self.predicates))
+            else:
+                buf.append(text_type(self.prediction))
+        return u"".join(buf)

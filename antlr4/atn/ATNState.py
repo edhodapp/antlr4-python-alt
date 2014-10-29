@@ -88,9 +88,11 @@
 #
 # <embed src="images/OptionalNonGreedy.svg" type="image/svg+xml"/>
 #
+from antlr4._compat import py2_unicode_compat
 
 INITIAL_NUM_TRANSITIONS = 4
 
+@py2_unicode_compat
 class ATNState(object):
 
     # constants for serialization
@@ -153,10 +155,7 @@ class ATNState(object):
         return False
 
     def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
-        return unicode(self.stateNumber)
+        return u"%d" % self.stateNumber
 
     def addTransition(self, trans, index=-1):
         if len(self.transitions)==0:

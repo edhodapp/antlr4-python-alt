@@ -41,7 +41,7 @@ class InputStream (object):
     
     def __init__(self, data):
         self.name = "<empty>"
-        self.strdata = unicode(data)
+        self.strdata = data
         self._loadString()
 
     def _loadString(self):    
@@ -107,12 +107,6 @@ class InputStream (object):
             return ""
         else:
             return self.strdata[start:stop+1]
-
-    def __str__(self):
-        return unicode(self)
-
-    def __unicode__(self):
-        return self.strdata
 
 
 class TestInputStream(unittest.TestCase):
