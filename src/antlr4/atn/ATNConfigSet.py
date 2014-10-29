@@ -96,7 +96,8 @@ class ATNConfigSet(object):
             self.hasSemanticContext = True
         if config.reachesIntoOuterContext > 0:
             self.dipsIntoOuterContext = True
-        key = (config.state.stateNumber, config.alt, config.semanticContext)
+        key = (config.state.stateNumber, config.alt,
+               config.context, config.semanticContext)
         try:
             existing = self.configLookup[key]
         except KeyError:
