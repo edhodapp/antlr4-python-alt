@@ -58,40 +58,6 @@ class Token (object):
 
     HIDDEN_CHANNEL = 1
 
-    def __init__(self):
-        self.source = None
-        self.type = None # token type of the token
-        self.channel = None # The parser ignores everything not on DEFAULT_CHANNEL
-        self.start = None # optional; return -1 if not implemented.
-        self.stop = None  # optional; return -1 if not implemented.
-        self.tokenIndex = None # from 0..n-1 of the token object in the input stream
-        self.line = None # line=1..n of the 1st character
-        self.column = None # beginning of the line at which it occurs, 0..n-1
-        self._text = None # text of the token.
-
-    @property
-    def text(self):
-        return self._text
-
-    # Explicitly set the text for this token. If {code text} is not
-    # {@code null}, then {@link #getText} will return this value rather than
-    # extracting the text from the input.
-    #
-    # @param text The explicit text of the token, or {@code null} if the text
-    # should be obtained from the input along with the start and stop indexes
-    # of the token.
-
-    @text.setter
-    def text(self, text):
-        self._text = text
-
-
-    def getTokenSource(self):
-        return self.source[0]
-
-    def getInputStream(self):
-        return self.source[1]
-
 
 @py2_unicode_compat
 class CommonToken(Token):
@@ -101,18 +67,22 @@ class CommonToken(Token):
     # {@link #source} for tokens that do not have a source.
     EMPTY_SOURCE = (None, None)
 
-    def __init__(self, source = EMPTY_SOURCE, type = None, channel=Token.DEFAULT_CHANNEL, start=-1, stop=-1):
-        super(CommonToken, self).__init__()
+    def __init__(self, source=EMPTY_SOURCE, type=None,
+                 channel=Token.DEFAULT_CHANNEL, start=0, stop=0, text=None):
+        assert type is not None
         self.source = source
         self.type = type
         self.channel = channel
         self.start = start
         self.stop = stop
+        self._text = text
+
         self.tokenIndex = -1
         if source[0] is not None:
             self.line = source[0].line
             self.column = source[0].column
         else:
+            self.line = 0
             self.column = -1
 
     # Constructs a new {@link CommonToken} as a copy of another {@link Token}.
@@ -128,11 +98,11 @@ class CommonToken(Token):
     # @param oldToken The token to copy.
      #
     def clone(self):
-        t = CommonToken(self.source, self.type, self.channel, self.start, self.stop)
+        t = CommonToken(self.source, self.type, self.channel,
+                        self.start, self.stop, self.text)
         t.tokenIndex = self.tokenIndex
         t.line = self.line
         t.column = self.column
-        t.text = self.text
         return t
 
     @property
@@ -151,6 +121,12 @@ class CommonToken(Token):
     @text.setter
     def text(self, text):
         self._text = text
+
+    def getTokenSource(self):
+        return self.source[0]
+
+    def getInputStream(self):
+        return self.source[1]
 
     def __str__(self):
         channel_str = u""
