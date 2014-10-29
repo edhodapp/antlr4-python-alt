@@ -55,8 +55,6 @@ class ATNConfig(object):
         if semantic is None:
             semantic = SemanticContext.NONE
 
-        if not isinstance(state, ATNState):
-            pass
         # The ATN state associated with this configuration#/
         self.state = state
         # What alt (or lexer rule) is predicted by this configuration#/
