@@ -45,10 +45,10 @@
 from antlr4 import (DFA, CommonTokenStream, Lexer, LexerATNSimulator,
                     ParserRuleContext, PredictionContextCache, TerminalNode)
 from antlr4._compat import py2_unicode_compat
+from antlr4.ANTLRInputStream import ANTLRInputStream
 from antlr4.atn.ATNSimulator import ATNSimulator
 from antlr4.ErrorListener import ErrorListener
 from antlr4.Errors import LexerNoViableAltException
-from antlr4.InputStream import InputStream
 from antlr4.Token import Token
 from antlr4.tree.Trees import Trees
 
@@ -124,7 +124,7 @@ class XPath(object):
         self.elements = self.split(path)
 
     def split(self, path):
-        input = InputStream(path)
+        input = ANTLRInputStream(path)
         lexer = XPathLexer(input)
         def recover(self, e):
             raise e

@@ -38,7 +38,7 @@ from antlr4.Token import Token
 #
 
 
-class InputStream (object):
+class ANTLRInputStream(object):
     
     def __init__(self, data):
         self.name = "<empty>"
@@ -110,10 +110,10 @@ class InputStream (object):
             return self.strdata[start:stop+1]
 
 
-class TestInputStream(unittest.TestCase):
+class TestANTLRInputStream(unittest.TestCase):
     
     def testStream(self):
-        stream = InputStream("abcde")
+        stream = ANTLRInputStream("abcde")
         self.assertEqual(0, stream.index)
         self.assertEqual(5, stream.size)
         self.assertEqual(ord("a"), stream.LA(1))

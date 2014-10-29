@@ -87,9 +87,9 @@
 # {@code \<} and {@code \>}.</p>
 #
 from antlr4 import CommonTokenStream, ParserRuleContext
+from antlr4.ANTLRInputStream import ANTLRInputStream
 from antlr4.Errors import ParseCancellationException, RecognitionException
 from antlr4.ErrorStrategy import BailErrorStrategy
-from antlr4.InputStream import InputStream
 from antlr4.ListTokenSource import ListTokenSource
 from antlr4.Token import Token
 from antlr4.tree.pattern.Chunk import TagChunk, TextChunk
@@ -313,7 +313,7 @@ class ParseTreePatternMatcher(object):
                 else:
                     raise Exception("invalid tag: " + str(chunk.tag) + " in pattern: " + pattern)
             else:
-                self.lexer.setInputStream(InputStream(chunk.text))
+                self.lexer.setInputStream(ANTLRInputStream(chunk.text))
                 t = self.lexer.nextToken()
                 while t.type!=Token.EOF:
                     tokens.append(t)

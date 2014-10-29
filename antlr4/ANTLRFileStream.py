@@ -37,10 +37,10 @@
 import codecs
 import unittest
 
-from antlr4.InputStream import InputStream
+from antlr4.ANTLRInputStream import ANTLRInputStream
 
 
-class FileStream(InputStream):
+class ANTLRFileStream(ANTLRInputStream):
 
     def __init__(self, fileName, encoding='ascii'):
         self.fileName = fileName
@@ -51,8 +51,8 @@ class FileStream(InputStream):
             super(type(self), self).__init__(data)
 
 
-class TestFileStream(unittest.TestCase):
+class TestANTLRFileStream(unittest.TestCase):
 
     def testStream(self):
-        stream = FileStream("FileStream.py")
+        stream = ANTLRFileStream("ANTLRFileStream.py")
         self.assertTrue(stream.size>0)
