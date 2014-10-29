@@ -40,8 +40,8 @@ from io import StringIO
 from antlr4.atn.ATNState import ATNState, DecisionState
 from antlr4.atn.SemanticContext import SemanticContext
 
-class ATNConfig(object):
 
+class ATNConfig(object):
     def __init__(self, state=None, alt=None, context=None, semantic=None, config=None):
         if config is not None:
             if state is None:
@@ -76,7 +76,6 @@ class ATNConfig(object):
         # outer context: depth &gt; 0.  Note that it may not be totally
         # accurate depth since I don't ever decrement. TODO: make it a boolean then
         self.reachesIntoOuterContext = 0 if config is None else config.reachesIntoOuterContext
-
 
     # An ATN configuration is equal to another if both have
     #  the same state, they predict the same alternative, and
@@ -121,10 +120,13 @@ class ATNConfig(object):
             buf.write(u')')
             return buf.getvalue()
 
-class LexerATNConfig(ATNConfig):
 
-    def __init__(self, state, alt=None, context=None, semantic=SemanticContext.NONE, lexerActionExecutor=None, config=None):
-        super(LexerATNConfig, self).__init__(state=state, alt=alt, context=context, semantic=semantic, config=config)
+class LexerATNConfig(ATNConfig):
+    def __init__(self, state, alt=None, context=None, semantic=None,
+                 lexerActionExecutor=None, config=None):
+        super(LexerATNConfig, self).__init__(
+            state=state, alt=alt, context=context,
+            semantic=semantic, config=config)
         if config is not None:
             if lexerActionExecutor is None:
                 lexerActionExecutor = config.lexerActionExecutor
