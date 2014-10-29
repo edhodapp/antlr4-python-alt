@@ -40,6 +40,7 @@ from antlr4.atn.ATN import ATN
 from antlr4.atn.SemanticContext import SemanticContext
 from antlr4.error.Errors import UnsupportedOperationException, IllegalStateException
 
+
 class ATNConfigSet(object):
     #
     # The reason that we need this is because we don't want the hash map to use
@@ -80,6 +81,10 @@ class ATNConfigSet(object):
     def __iter__(self):
         return self.configs.__iter__()
 
+    @staticmethod
+    def _getKey(config):
+        return (config.state.stateNumber, config.alt, config.semanticContext)
+
     # Adding a new config means merging contexts with existing configs for
     # {@code (s, i, pi, _)}, where {@code s} is the
     # {@link ATNConfig#state}, {@code i} is the {@link ATNConfig#alt}, and
@@ -96,8 +101,7 @@ class ATNConfigSet(object):
             self.hasSemanticContext = True
         if config.reachesIntoOuterContext > 0:
             self.dipsIntoOuterContext = True
-        key = (config.state.stateNumber, config.alt,
-               config.context, config.semanticContext)
+        key = self._getKey(config)
         try:
             existing = self.configLookup[key]
         except KeyError:
@@ -219,10 +223,9 @@ class ATNConfigSet(object):
 
 
 class OrderedATNConfigSet(ATNConfigSet):
-
     def __init__(self):
         super(OrderedATNConfigSet, self).__init__()
-        # self.configLookup = set()
 
-
-
+    @staticmethod
+    def _getKey(config):
+        return config
