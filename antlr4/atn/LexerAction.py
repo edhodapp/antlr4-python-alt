@@ -29,7 +29,9 @@
  # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  #
-from antlr4._compat import py2_unicode_compat, text_type
+from abc import ABCMeta, abstractmethod, abstractproperty
+
+from antlr4._compat import add_metaclass, py2_unicode_compat, text_type
 
 
 class LexerActionType(object):
@@ -43,8 +45,20 @@ class LexerActionType(object):
     SKIP = 6        #The type of a {@link LexerSkipAction} action.
     TYPE = 7        #The type of a {@link LexerTypeAction} action.
 
+
+@add_metaclass(ABCMeta)
 class LexerAction(object):
-    isPositionDependent = False
+    @abstractproperty
+    def actionType(self):
+        pass
+
+    @abstractproperty
+    def isPositionDependent(self):
+        pass
+
+    @abstractmethod
+    def execute(self, lexer):
+        pass
 
 #
 # Implements the {@code skip} lexer action by calling {@link Lexer#skip}.
@@ -54,6 +68,7 @@ class LexerAction(object):
 @py2_unicode_compat
 class LexerSkipAction(LexerAction ):
     actionType = LexerActionType.SKIP
+    isPositionDependent = False
 
     # Provides a singleton instance of this parameterless lexer action.
     INSTANCE = None
@@ -71,6 +86,7 @@ LexerSkipAction.INSTANCE = LexerSkipAction()
 @py2_unicode_compat
 class LexerTypeAction(LexerAction):
     actionType = LexerActionType.TYPE
+    isPositionDependent = False
 
     def __init__(self, type):
         self.type = type
@@ -98,6 +114,7 @@ class LexerTypeAction(LexerAction):
 @py2_unicode_compat
 class LexerPushModeAction(LexerAction):
     actionType = LexerActionType.PUSH_MODE
+    isPositionDependent = False
 
     def __init__(self, mode):
         self.mode = mode
@@ -129,6 +146,7 @@ class LexerPushModeAction(LexerAction):
 @py2_unicode_compat
 class LexerPopModeAction(LexerAction):
     actionType = LexerActionType.POP_MODE
+    isPositionDependent = False
 
     INSTANCE = None
 
@@ -148,6 +166,7 @@ LexerPopModeAction.INSTANCE = LexerPopModeAction()
 @py2_unicode_compat
 class LexerMoreAction(LexerAction):
     actionType = LexerActionType.MORE
+    isPositionDependent = False
 
     INSTANCE = None
 
@@ -165,6 +184,7 @@ LexerMoreAction.INSTANCE = LexerMoreAction()
 @py2_unicode_compat
 class LexerModeAction(LexerAction):
     actionType = LexerActionType.MODE
+    isPositionDependent = False
 
     def __init__(self, mode):
         self.mode = mode
@@ -234,6 +254,7 @@ class LexerCustomAction(LexerAction):
 @py2_unicode_compat
 class LexerChannelAction(LexerAction):
     actionType = LexerActionType.CHANNEL
+    isPositionDependent = False
 
     # Constructs a new {@code channel} action with the specified channel value.
     # @param channel The channel value to pass to {@link Lexer#setChannel}.
@@ -282,9 +303,13 @@ class LexerIndexedCustomAction(LexerAction):
     # @param action The lexer action to execute at a particular offset in the
     # input {@link CharStream}.
     def __init__(self, offset, action):
-        self.actionType = action.actionType
+        self._actionType = action.actionType
         self.offset = offset
         self.action = action
+
+    @property
+    def actionType(self):
+        return self._actionType
 
     # <p>This method calls {@link #execute} on the result of {@link #getAction}
     # using the provided {@code lexer}.</p>
