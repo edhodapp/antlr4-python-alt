@@ -1,7 +1,7 @@
 import unittest
-from io import StringIO
 
 from antlr4._compat import xrange
+from antlr4._java import StringBuilder
 from antlr4.Token import Token
 
 
@@ -134,19 +134,19 @@ class IntervalSet(object):
     def toString(self, tokenNames):
         if self.intervals is None:
             return u"{}"
-        with StringIO() as buf:
-            if len(self)>1:
-                buf.write(u"{")
-            first = True
-            for i in self.intervals:
-                for j in i:
-                    if not first:
-                        buf.write(u", ")
-                    buf.write(self.elementName(tokenNames, j))
-                    first = False
-            if len(self)>1:
-                buf.write(u"}")
-            return buf.getvalue()
+        buf = StringBuilder()
+        if len(self) > 1:
+            buf.append(u"{")
+        first = True
+        for i in self.intervals:
+            for j in i:
+                if not first:
+                    buf.append(u", ")
+                buf.append(self.elementName(tokenNames, j))
+                first = False
+        if len(self) > 1:
+            buf.append(u"}")
+        return buf.toString()
 
     def elementName(self, tokenNames, a):
         if a==Token.EOF:

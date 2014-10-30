@@ -51,6 +51,7 @@
 #  @see ParserRuleContext
 #/
 from antlr4._compat import py2_unicode_compat, text_type
+from antlr4._java import StringBuilder
 from antlr4.tree.Tree import INVALID_INTERVAL, RuleNode
 from antlr4.tree.Trees import Trees
 
@@ -104,7 +105,12 @@ class RuleContext(RuleNode):
     def getText(self):
         if self.getChildCount() == 0:
             return u""
-        return u"".join(child.getText() for child in self.getChildren())
+
+        builder = StringBuilder()
+        for child in self.getChildren():
+            builder.append(child.getText())
+
+        return builder.toString()
 
     def getRuleIndex(self):
         return -1
@@ -210,7 +216,7 @@ class RuleContext(RuleNode):
    #  }
 
     def toString(self, ruleNames, stop):
-        buf = []
+        buf = StringBuilder()
         p = self
         buf.append(u"[")
         while p is not None and p is not stop:
@@ -228,4 +234,4 @@ class RuleContext(RuleNode):
             p = p.parentCtx
 
         buf.append(u"]")
-        return u''.join(buf)
+        return buf.toString()

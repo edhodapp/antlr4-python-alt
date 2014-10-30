@@ -32,6 +32,7 @@
 
 # Map a predicate to a predicted alternative.#/
 from antlr4._compat import py2_unicode_compat, text_type
+from antlr4._java import StringBuilder
 from antlr4.atn.ATNConfigSet import ATNConfigSet
 
 
@@ -139,7 +140,7 @@ class DFAState(object):
             return self.configs==other.configs
 
     def __str__(self):
-        buf = []
+        buf = StringBuilder()
         buf.append(text_type(self.stateNumber))
         buf.append(u":")
         buf.append(text_type(self.configs))
@@ -149,4 +150,4 @@ class DFAState(object):
                 buf.append(text_type(self.predicates))
             else:
                 buf.append(text_type(self.prediction))
-        return u"".join(buf)
+        return buf.toString()

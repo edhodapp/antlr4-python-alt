@@ -38,6 +38,7 @@
 #  an ATN state.
 #/
 from antlr4._compat import py2_unicode_compat, text_type
+from antlr4._java import StringBuilder
 from antlr4.atn.ATNState import DecisionState
 from antlr4.atn.SemanticContext import SemanticContext
 
@@ -99,7 +100,7 @@ class ATNConfig(object):
                      self.semanticContext))
 
     def __str__(self):
-        buf = []
+        buf = StringBuilder()
         buf.append(u"(")
         buf.append(text_type(self.state))
         buf.append(u",")
@@ -115,7 +116,7 @@ class ATNConfig(object):
             buf.append(u",up=")
             buf.append(text_type(self.reachesIntoOuterContext))
         buf.append(u')')
-        return u"".join(buf)
+        return buf.toString()
 
 
 class LexerATNConfig(ATNConfig):

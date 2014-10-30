@@ -32,6 +32,7 @@
 
 # A DFA walker that knows how to dump them to serialized strings.#/
 from antlr4._compat import py2_unicode_compat, text_type, unichr
+from antlr4._java import StringBuilder
 from antlr4.misc.Utils import str_list
 
 
@@ -45,7 +46,7 @@ class DFASerializer(object):
     def __str__(self):
         if self.dfa.s0 is None:
             return None
-        buf = []
+        buf = StringBuilder()
         for s in self.dfa.sortedStates():
             n = 0
             if s.edges is not None:
@@ -56,7 +57,8 @@ class DFASerializer(object):
                     buf.append(self.getStateString(s))
                     label = self.getEdgeLabel(i)
                     buf.append(u"-%s->%s\n" % (label, self.getStateString(t)))
-        output = u"".join(buf)
+
+        output = buf.toString()
         if len(output)==0:
             return None
         else:

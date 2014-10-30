@@ -32,6 +32,7 @@
 
 # A set of utility routines useful for all kinds of ANTLR trees.#
 from antlr4._compat import text_type
+from antlr4._java import StringBuilder
 from antlr4.misc.Utils import escapeWhitespace
 from antlr4.Token import Token
 from antlr4.tree.Tree import ErrorNode, RuleNode, TerminalNode
@@ -49,13 +50,16 @@ class Trees(object):
         s = escapeWhitespace(cls.getNodeText(t, ruleNames), False)
         if t.getChildCount()==0:
             return s
-        buf = [u"(", s, u" "]
+        buf = StringBuilder()
+        buf.append(u"(")
+        buf.append(s)
+        buf.append(u" ")
         for i in range(0, t.getChildCount()):
             if i > 0:
                 buf.append(u' ')
             buf.append(cls.toStringTree(t.getChild(i), ruleNames))
         buf.append(u")")
-        return u"".join(buf)
+        return buf.toString()
 
     @classmethod
     def getNodeText(cls, t, ruleNames=None, recog=None):

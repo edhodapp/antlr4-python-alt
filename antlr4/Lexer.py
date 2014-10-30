@@ -33,8 +33,7 @@
 #  uses simplified match() and error recovery mechanisms in the interest
 #  of speed.
 #/
-from io import StringIO
-
+from antlr4._java import StringBuilder
 from antlr4.CommonTokenFactory import CommonTokenFactory
 from antlr4.Errors import IllegalStateException, LexerNoViableAltException
 from antlr4.Recognizer import Recognizer
@@ -311,10 +310,10 @@ class Lexer(Recognizer, TokenSource):
         listener.syntaxError(self, None, self._tokenStartLine, self._tokenStartColumn, msg, e)
 
     def getErrorDisplay(self, s):
-        with StringIO() as buf:
-            for c in s:
-                buf.write(self.getErrorDisplayForChar(c))
-            return buf.getvalue()
+        buf = StringBuilder()
+        for c in s:
+            buf.append(self.getErrorDisplayForChar(c))
+        return buf.toString()
 
     def getErrorDisplayForChar(self, c):
         if ord(c[0])==Token.EOF:

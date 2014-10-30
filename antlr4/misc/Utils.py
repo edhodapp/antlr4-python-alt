@@ -30,6 +30,7 @@
 #
 
 from antlr4._compat import text_type
+from antlr4._java import StringBuilder
 
 
 def str_collection(val, begin, end):
@@ -42,7 +43,7 @@ def str_set(val):
     return str_collection(val, u'{', u'}')
 
 def escapeWhitespace(s, escapeSpaces):
-    buf = []
+    buf = StringBuilder()
     for c in s:
         if c==' ' and escapeSpaces:
             buf.append(u'\u00B7')
@@ -54,4 +55,4 @@ def escapeWhitespace(s, escapeSpaces):
             buf.append(u"\\r")
         else:
             buf.append(c)
-    return u''.join(buf)
+    return buf.toString()

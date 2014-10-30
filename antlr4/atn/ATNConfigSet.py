@@ -35,6 +35,7 @@
 # graph-structured stack.
 #/
 from antlr4._compat import py2_unicode_compat, text_type
+from antlr4._java import StringBuilder
 from antlr4.atn.ATN import ATN
 from antlr4.atn.PredictionContext import merge
 from antlr4.atn.SemanticContext import SemanticContext
@@ -205,7 +206,7 @@ class ATNConfigSet(object):
         self.configLookup = None # can't mod, no need for lookup cache
 
     def __str__(self):
-        buf = []
+        buf = StringBuilder()
         buf.append(str_list(self.configs))
         if self.hasSemanticContext:
             buf.append(u",hasSemanticContext=")
@@ -218,7 +219,7 @@ class ATNConfigSet(object):
             buf.append(text_type(self.conflictingAlts))
         if self.dipsIntoOuterContext:
             buf.append(u",dipsIntoOuterContext")
-        return u"".join(buf)
+        return buf.toString()
 
 
 class OrderedATNConfigSet(ATNConfigSet):

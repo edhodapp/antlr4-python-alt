@@ -38,8 +38,8 @@
 # channel, such as {@link Token#DEFAULT_CHANNEL} or
 # {@link Token#HIDDEN_CHANNEL}, use a filtering token stream such a
 # {@link CommonTokenStream}.</p>
-from io import StringIO
 
+from antlr4._java import StringBuilder
 from antlr4.Errors import IllegalStateException
 from antlr4.Token import Token
 
@@ -312,14 +312,14 @@ class BufferedTokenStream(TokenStream):
             return ""
         if stop >= len(self.tokens):
             stop = len(self.tokens)-1
-        with StringIO() as buf:
-            for i in range(start, stop+1):
-                t = self.tokens[i]
-                if t.type==Token.EOF:
-                    break
-                buf.write(t.text)
-            return buf.getvalue()
 
+        buf = StringBuilder()
+        for i in range(start, stop+1):
+            t = self.tokens[i]
+            if t.type == Token.EOF:
+                break
+            buf.append(t.text)
+        return buf.toString()
 
     # Get all tokens from lexer until EOF#/
     def fill(self):
