@@ -91,10 +91,10 @@ class Trees(object):
     @classmethod
     def getAncestors(cls, t):
         ancestors = []
-        t = t.getParent()
+        t = t.parentCtx
         while t is not None:
-            ancestors.append(0, t) # insert at start
-            t = t.getParent()
+            ancestors.insert(0, t) # insert at start
+            t = t.parentCtx
         return ancestors
 
     @classmethod
