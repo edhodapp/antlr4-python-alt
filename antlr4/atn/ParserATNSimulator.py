@@ -283,7 +283,7 @@ from antlr4.Token import Token
 
 class ParserATNSimulator(ATNSimulator):
 
-    debug = False
+    debug = True
     debug_list_atn_decisions = False
     dfa_debug = False
     retry_debug = False
@@ -1364,7 +1364,7 @@ class ParserATNSimulator(ATNSimulator):
                 print(str(t) + " ttype out of range: " + str_list(self.parser.tokenNames))
                 print(str_list(self.parser.getInputStream().getTokens()))
             else:
-                return self.parser.tokensNames[t] + u"<" + text_type(t) + ">"
+                return self.parser.tokenNames[t] + u"<" + text_type(t) + ">"
         return text_type(t)
 
     def getLookaheadName(self, input):

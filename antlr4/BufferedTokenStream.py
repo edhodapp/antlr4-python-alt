@@ -84,7 +84,10 @@ class BufferedTokenStream(TokenStream):
         # {@link #tokens} is trivial with this field.</li>
         # <ul>
         self.fetchedEOF = False
-        
+
+    def size(self):
+        return len(self.tokens)
+    
     def mark(self):
         return 0
     

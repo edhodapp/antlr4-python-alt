@@ -54,6 +54,7 @@ from antlr4._compat import py2_unicode_compat, text_type
 from antlr4._java import StringBuilder
 from antlr4.tree.Tree import INVALID_INTERVAL, RuleNode
 from antlr4.tree.Trees import Trees
+from antlr4.Recognizer import Recognizer
 
 
 @py2_unicode_compat
@@ -215,7 +216,22 @@ class RuleContext(RuleNode):
    #      return toString(ruleNamesList, stop);
    #  }
 
-    def toString(self, ruleNames, stop):
+    def toString(self, *args):
+        if len(args) == 0:
+            ruleNames = None
+            stop = None
+        elif isinstance(args[0], Recognizer) and len(args) == 1:
+            recog, = args
+            ruleNames = None if recog is None else recog.ruleNames
+            stop = self.EMPTY
+        elif len(args) == 1:
+            ruleNames, = args
+            stop = None
+        elif isinstance(args[0], Recognizer) and len(args) == 2:
+            recog, stop = args
+            ruleNames = None if recog is None else recog.ruleNames
+        elif len(args) == 2:
+            ruleNames, stop = args
         buf = StringBuilder()
         p = self
         buf.append(u"[")

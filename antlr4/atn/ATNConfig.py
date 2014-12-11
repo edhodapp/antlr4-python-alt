@@ -118,6 +118,9 @@ class ATNConfig(object):
         buf.append(u')')
         return buf.toString()
 
+    def toString(self, *args):
+        return self.__str__()
+
 
 class LexerATNConfig(ATNConfig):
     def __init__(self, state, alt=None, context=None, semantic=None,

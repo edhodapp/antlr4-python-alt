@@ -30,6 +30,8 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #/
 
+from antlr4._java import StringBuilder
+from antlr4.BufferedTokenStream import BufferedTokenStream
 from antlr4.Token import Token
 from antlr4.misc.IntervalSet import Interval
 
@@ -50,7 +52,7 @@ class TokenStreamRewriter(object):
                 self.text = text
 
         def execute(self, buf):
-            return self.index, buf
+            return self.index
 
         def toString(self):
             opName = type(self).__name__
@@ -64,10 +66,10 @@ class TokenStreamRewriter(object):
                 tsr, index, text)
 
         def execute(self, buf):
-            buf += self.text
+            buf.append(self.text)
             if self._tsr.tokens[self.index].type != Token.EOF:
-                buf += self._tsr.tokens[self.index].getText()
-            return self.index+1, buf
+                buf.append(self._tsr.tokens[self.index].getText())
+            return self.index+1
 
 
     class ReplaceOp(RewriteOperation):
@@ -78,8 +80,8 @@ class TokenStreamRewriter(object):
 
         def execute(self, buf):
             if self.text is not None:
-                buf += self.text
-            return self.lastIndex+1, buf
+                buf.append(self.text)
+            return self.lastIndex+1
 
         def toString(self):
             if self.text is None:
@@ -255,7 +257,7 @@ class TokenStreamRewriter(object):
         if len(args) == 0:
             # getText()
             programName = self.DEFAULT_PROGRAM_NAME
-            interval = Interval.of(0, len(self.tokens)-1)
+            interval = Interval(0, self.tokens.size()-1)
         elif isinstance(args[0], Interval):
             # getText(Interval interval)
             interval, = args
@@ -264,13 +266,13 @@ class TokenStreamRewriter(object):
             # getText(String programName, Interval interval)
             programName, interval = args
         rewrites = self.programs.get(programName, None)
-        start = interval.a
-        stop = interval.b
-        stop = min(stop, len(self.tokens)-1)
+        start = interval.start
+        stop = interval.stop
+        stop = min(stop, self.tokens.size()-1)
         start = max(0, start)
         if not rewrites:
-            return self.tokens.getText(interval)
-        buf = ''
+            return self.tokens.getText((interval.start, interval.stop))
+        buf = StringBuilder()
         indexToOp = self.reduceToSingleOperationPerIndex(rewrites)
         i = start
         while i <= stop and i < len(self.tokens):
@@ -278,15 +280,15 @@ class TokenStreamRewriter(object):
             tok = self.tokens.get(i, None)
             if op is None:
                 if tok.type != Token.EOF:
-                    buf = buf + tok.getText()
+                    buf.append(tok.getText())
                     i += 1
             else:
                 del indexToOp[i]
-                i, buf = op.execute(buf)
+                i = op.execute(buf)
         if stop == len(self.tokens)-1:
             for op in indexToOp.values():
                 if op.index > len(self.tokens)-1:
-                    buf = buf + op.text
+                    buf.append(op.text)
         return buf.toString()
 
     def reduceToSingleOperationPreIndex(rewrites):
