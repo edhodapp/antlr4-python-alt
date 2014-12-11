@@ -41,7 +41,8 @@ class TokenStreamRewriter(object):
 
 
     class RewriteOperation(object):
-        def __init__(self, index, text=None):
+        def __init__(self, tsr, index, text=None):
+            self._tsr = tsr
             self.instructionIndex = None
             self.text = None
             self.index = index
@@ -49,15 +50,46 @@ class TokenStreamRewriter(object):
                 self.text = text
 
         def execute(self, buf):
-            return self.index
+            return self.index, buf
+
+        def toString(self):
+            opName = type(self).__name__
+            return '<{}@{}:"{}">'.format(
+                opName, self._tsr.tokens[self.index], self.text)
 
 
     class InsertBeforeOp(RewriteOperation):
-        def __init__(self, index, text):
-            super(InsertBeforeOp, self).__init__(self, index, text)
+        def __init__(self, tsr, index, text):
+            super(TokenStreamRewriter.InsertBeforeOp, self).__init__(
+                tsr, index, text)
 
         def execute(self, buf):
-            buf.append(self.text)
+            buf += self.text
+            if self._tsr.tokens[self.index].type != Token.EOF:
+                buf += self._tsr.tokens[self.index].getText()
+            return self.index+1, buf
+
+
+    class ReplaceOp(RewriteOperation):
+        def __init__(self, tsr, from_, to, text):
+            super(TokenStreamWriter.ReplaceOp, self).__init__(
+                tsr, from_, to, text)
+            self.lastIndex = to
+
+        def execute(self, buf):
+            if self.text is not None:
+                buf += self.text
+            return self.lastIndex+1, buf
+
+        def toString(self):
+            if self.text is None:
+                return '<DeleteOp@{}..{}>'.format(
+                    self._tsr.tokens[self.index],
+                    self._tsr.tokens[self.lastIndex])
+            return '<ReplaceOp@{}..{}:"{}">'.format(
+                self._tsr.tokens[self.index],
+                self._tsr.tokens[self.lastIndex],
+                self.text)
 
 
     def __init__(self, tokens):
@@ -126,7 +158,7 @@ class TokenStreamRewriter(object):
         else:
             # insertBefore(String programName, int index, Object text)
             programName, index, text = args
-        op = self.InsertBeforeOp(index, text)
+        op = self.InsertBeforeOp(self, index, text)
         rewrites = self.getProgram(programName)
         op.instructionIndex = len(rewrites)
         rewrites.append(op)
@@ -245,12 +277,12 @@ class TokenStreamRewriter(object):
             op = indexToOp.get(i, None)
             tok = self.tokens.get(i, None)
             if op is None:
-                if tok.getType() != Token.EOF:
+                if tok.type != Token.EOF:
                     buf = buf + tok.getText()
-                    i++
+                    i += 1
             else:
                 del indexToOp[i]
-                i = op.execute(buf)
+                i, buf = op.execute(buf)
         if stop == len(self.tokens)-1:
             for op in indexToOp.values():
                 if op.index > len(self.tokens)-1:
@@ -262,10 +294,10 @@ class TokenStreamRewriter(object):
             op = rewrites[i]
             if op is None:
                 continue
-            if not isinstance(op, ReplaceOp):
+            if not isinstance(op, self.ReplaceOp):
                 continue
             rop = op
-            inserts = getKindOfOps(rewrites, self.InsertBeforeOp.class, i)
+            inserts = self.getKindOfOps(rewrites, type(self.InsertBeforeOp), i)
             for iop in inserts:
                 if iop.index == rop.index:
                     rewrites[iop.instructionIndex] = None
@@ -273,7 +305,7 @@ class TokenStreamRewriter(object):
                         '' if rop.text is None else rop.text.toString())
                 elif iop.index > rop.index and iop.index <= rop.lastIndex:
                     rewrites[iop.instructionIndex] = None
-            prevReplaces = self.getKindOfOps(rewrites, ReplaceOp.class, i)
+            prevReplaces = self.getKindOfOps(rewrites, type(self.ReplaceOp), i)
             for prevRop in prevReplaces:
                 if (prevRop.index >= rop.index and
                     prevRop.lastIndex <= rop.lastIndex):
@@ -283,7 +315,7 @@ class TokenStreamRewriter(object):
                             prevRop.index > rop.lastIndex)
                 same = (prevRop.index == rop.index and
                         prevRop.lastIndex == rop.lastIndex)
-                if prevRop.text is None and rop.text is None && not disjoint:
+                if prevRop.text is None and rop.text is None and not disjoint:
                     rewrite[prevRop.instructionIndex] = None
                     rop.index = min(prevRop.index, rop.index)
                     rop.lastIndex = max(prevRop.lastIndex, rop.lastIndex)
@@ -296,15 +328,16 @@ class TokenStreamRewriter(object):
             op = rewrites[i]
             if op is None:
                 continue
-            if not isinstance(op, InsertBeforeOp):
+            if not isinstance(op, self.InsertBeforeOp):
                 continue
             iop = op
-            prevInserts = self.getKindOfOps(rewrites, InsertBeforeOp.class, i)
+            prevInserts = self.getKindOfOps(
+                rewrites, type(self.InsertBeforeOp), i)
             for prevIop in prevInserts:
-                if prevIop.index = iop.index:
+                if prevIop.index == iop.index:
                     iop.text = self.catOpText(iop.text, prevIop.text)
                     rewrites[prevIop.instructionIndex] = None
-            prevReplaces = self.getKindOfOps(rewrites, ReplaceOp.class, i)
+            prevReplaces = self.getKindOfOps(rewrites, type(self.ReplaceOp), i)
             for rop in prevReplaces:
                 if iop.index == rop.index:
                     rop.text = self.catOpText(iop.text, rop.text)
