@@ -7,6 +7,7 @@ from antlr4.atn.PredictionContext import PredictionContextCache
 from antlr4.atn.PredictionMode import PredictionMode
 from antlr4.BufferedTokenStream import TokenStream
 from antlr4.CommonTokenStream import CommonTokenStream
+from antlr4.TokenStreamRewriter import TokenStreamRewriter
 from antlr4.dfa.DFA import DFA
 from antlr4.DiagnosticErrorListener import DiagnosticErrorListener
 from antlr4.Errors import (IllegalStateException, NoViableAltException,
